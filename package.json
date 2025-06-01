@@ -1,7 +1,7 @@
 {
   "name": "camping-app",
   "version": "1.0.0",
-  "description": "Mini‐proiect Node.js vanilla cu dotenv și static serve",
+  "description": "proiect Node.js CaT_FirstClass",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
@@ -10,6 +10,7 @@
   "dependencies": {
     "busboy": "^1.6.0",
     "dotenv": "^16.5.0",
+    "googleapis": "^149.0.0",
     "jsonwebtoken": "^9.0.2",
     "mime-types": "^3.0.1",
     "openid-client": "^6.5.0",
