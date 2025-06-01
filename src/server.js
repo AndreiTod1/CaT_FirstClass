@@ -5,8 +5,15 @@ const path = require('path');
 const Router = require('./router');
 const serveStatic = require('./staticServer');
 const registerCamps = require('./controllers/camps');
+const { registerAuthRoutes, registerLogoutRoute } = require('./controllers/auth');
+
+async function start() {
 
 const router = new Router();
+
+//oauth router
+registerAuthRoutes(router);
+registerLogoutRoute(router);
 
 // Health check endpoint
 router.add('GET', /^\/api\/health$/, (req, res) => {
@@ -36,3 +43,6 @@ http
   .listen(PORT, () => {
     console.log(`🟢 Server listening on http://localhost:${PORT}`);
   });
+}
+
+start();

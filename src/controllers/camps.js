@@ -1,5 +1,5 @@
 const db = require('../services/db');
-const parseJson = require('../utils/parseJson');
+const parseJson = require('../utils/parseJSON');
 
 async function getAllCamps(req, res) {
   const result = await db.query('SELECT * FROM camp_sites ORDER BY id');
