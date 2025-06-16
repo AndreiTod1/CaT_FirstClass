@@ -1,55 +1,214 @@
 <!DOCTYPE html>
 <html lang="ro">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Camping App</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GreenCamping - Descoperă locuri de camping</title>
 
-  <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
+    <link rel="stylesheet" href="./css/main.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="js/map.js" defer></script>
 
-  <!-- MY CSS -->
-  <link rel="stylesheet" href="css/main.css">
-</head>
-<body>
-  <h1>🍃 Camping App</h1>
-  <p>
-    Serverul ruleaza!<br>
-    <a href="/api/health">Verifica starea API</a><br>
-    <a href="/api/camps">Vezi toate campingurile (JSON)</a>
-  </p>
+    <!-- leatflet -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  </head>
+  <body>
+    <!-- header -->
+    <header class="header">
+      <div class="container header-content">
+        <a href="index.html" class="logo">
+          GreenCamping<span class="logo-emoji">🏕️</span>
+        </a>
+        <nav class="desktop-nav">
+          <ul>
+            <li><a href="index.html" class="active">Acasă</a></li>
+            <li><a href="campgrounds.html">Camping-uri</a></li>
+            <li><a href="map.html">Hartă</a></li>
+            <li><a href="reviews.html">Recenzii</a></li>
+            <li><a href="about.html">Despre</a></li>
+          </ul>
+        </nav>
+        <div class="header-actions">
+          <button class="btn btn-primary">Conectare</button>
+        </div>
+        <button class="mobile-menu-btn">☰</button>
+      </div>
 
-  <!-- map div -->
-  <div id="map"></div>
+      <!-- mobile Menu -->
+      <div class="mobile-menu" id="mobile-menu">
+        <div class="container">
+          <div class="mobile-menu-header">
+            <a href="index.html" class="logo">GreenCamping🏕️</a>
+            <button class="close-menu">✕</button>
+          </div>
+          <nav class="mobile-nav">
+            <ul>
+              <li><a href="index.html" class="active">Acasă</a></li>
+              <li><a href="campgrounds.html">Camping-uri</a></li>
+              <li><a href="map.html">Hartă</a></li>
+              <li><a href="reviews.html">Recenzii</a></li>
+              <li><a href="about.html">Despre</a></li>
+              <li><a href="login.html">Conectare</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </header>
 
-  <!-- Leaflet JS -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-  </script>
-  <!-- Init map -->
-  <script src="js/map.js"></script>
+    <!-- hero -->
+    <section class="hero">
+      <div class="container">
+        <h1 class="hero-title fade-in">
+          Descoperă cele mai bune locuri de camping
+        </h1>
+        <p class="hero-subtitle fade-in">
+          Explorează, rezervă și împărtășește experiențele tale din natura
+          României.
+        </p>
+        <div class="hero-actions fade-in">
+          <a href="campgrounds.html" class="btn btn-primary btn-large"
+            >Explorează camping-uri
+          </a>
+          <a href="map.html" class="btn btn-outline btn-large">Vezi harta</a>
+        </div>
+      </div>
+    </section>
 
-  <a href="/api/auth/google">
-  <button>Login cu Google</button>
+    <!-- popular campings -->
+    <section class="featured">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Campinguri populare</h2>
+          <p class="section-subtitle">
+            Cele mai apreciate locații de camping din România
+          </p>
+        </div>
 
-  </a>
-  <button id="logoutBtn">Logout</button>
-  <script>
-  document.getElementById('logoutBtn').addEventListener('click', async () => {
-    const res = await fetch('/api/auth/logout', {
-      method: 'POST',
-      credentials: 'include'
-    });
-    if (res.ok) {
-      window.location.href = '/';
-    } else {
-      console.error('Erroare la logout');
-    }
-  });
-  </script>
+        <div class="camping-grid">
+          <!-- Card 1 -->
+          <div class="camping-card fade-in">
+            <div class="camping-image">
+              <img
+                src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1170&q=80"
+                alt="Camping Transilvania"
+              />
+            </div>
+            <div class="camping-header">
+              <div>
+                <h3 class="camping-name">Camping Transilvania</h3>
+                <p class="camping-location">Cluj-Napoca, Cluj</p>
+              </div>
+              <span class="camping-rating">4.7 ⭐</span>
+            </div>
+            <div class="camping-content">
+              <p class="camping-description">
+                Camping modern cu priveliști spectaculoase în inima
+                Transilvaniei.Camping modern cu priveliști spectaculoase în
+                inima Transilvaniei.Camping modern cu priveliști spectaculoase
+                în inima Transilvaniei.Camping modern cu priveliști
+                spectaculoase în inima Transilvaniei.Camping modern cu
+                priveliști spectaculoase în inima Transilvaniei.Camping modern
+                cu priveliști spectaculoase în inima Transilvaniei.
+              </p>
+              <div class="camping-tags">
+                <span class="tag">Wi-Fi</span>
+                <span class="tag">Dușuri</span>
+                <span class="tag">Grătar</span>
+              </div>
+            </div>
+            <div class="camping-footer">
+              <div class="camping-price">150 <span>lei/noapte</span></div>
+              <a
+                href="campground-details.html?id=1"
+                class="btn btn-primary btn-small"
+              >
+                Detalii
+              </a>
+            </div>
+          </div>
+          <!-- more cards -->
+        </div>
 
-</body>
+        <div
+          class="section-footer"
+          style="text-align: center; margin-top: 2rem"
+        >
+          <a href="campgrounds.html" class="btn btn-outline">
+            Vezi toate camping-urile
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- harta -->
+    <section class="map-preview">
+      <div class="container">
+        <div class="map-content">
+          <div class="map-info">
+            <h2 class="section-title">Găsește rapid locul perfect</h2>
+            <p>
+              Folosește harta interactivă pentru a filtra și compara locațiile
+              de camping.
+            </p>
+            <a href="map.html" class="btn btn-primary">Deschide harta</a>
+          </div>
+          <div class="map-container">
+            <div id="map" class="map">Hartă interactivă</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- start -->
+    <section class="start">
+      <div class="container">
+        <h2 class="start-title">Pregătit să descoperi natura?</h2>
+        <p class="start-text">
+          Creează-ți un cont și începe să explorezi locurile de camping din
+          România.
+        </p>
+        <div class="start-actions">
+          <a href="register.html" class="btn btn-white btn-large">
+            Creează cont
+          </a>
+          <a href="campgrounds.html" class="btn btn-outline-white btn-large">
+            Explorează
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-info">
+            <div class="footer-logo">GreenCamping🏕️</div>
+            <p class="footer-description">
+              Platforma ta pentru descoperirea și rezervarea campingurilor din
+              România.
+            </p>
+          </div>
+
+          <div class="social-links">
+            <a href="" class="social-link">Fb</a>
+            <a href="https://www.instagram.com/andreitod1/" class="social-link">
+              Ig
+            </a>
+            <a href="#" class="social-link">Tw</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; <span id="current-year"></span> GreenCamping</p>
+        </div>
+      </div>
+    </footer>
+  </body>
 </html>
