@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GreenCamping - Descoperă locuri de camping</title>
+    <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/map.css" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="js/map.js" defer></script>
+
+    <!-- leatflet -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="container header-content">
+        <a href="index.html" class="logo">
+          GreenCamping<span class="logo-emoji">🏕️</span>
+        </a>
+        <nav class="desktop-nav">
+          <ul>
+            <li><a href="index.html" class="active">Acasă</a></li>
+            <li><a href="campgrounds.html">Camping-uri</a></li>
+            <li><a href="map.html">Hartă</a></li>
+            <li><a href="reviews.html">Recenzii</a></li>
+            <li><a href="about.html">Despre</a></li>
+          </ul>
+        </nav>
+        <div class="header-actions">
+          <button class="btn btn-primary">Conectare</button>
+        </div>
+        <button class="mobile-menu-btn">☰</button>
+      </div>
+
+      <!-- mobile Menu -->
+      <div class="mobile-menu" id="mobile-menu">
+        <div class="container">
+          <div class="mobile-menu-header">
+            <a href="index.html" class="logo">GreenCamping🏕️</a>
+            <button class="close-menu">✕</button>
+          </div>
+          <nav class="mobile-nav">
+            <ul>
+              <li><a href="index.html" class="active">Acasă</a></li>
+              <li><a href="campgrounds.html">Camping-uri</a></li>
+              <li><a href="map.html">Hartă</a></li>
+              <li><a href="reviews.html">Recenzii</a></li>
+              <li><a href="about.html">Despre</a></li>
+              <li><a href="login.html">Conectare</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <!-- hero -->
+    <section class="hero">
+      <div class="container">
+        <h1 class="hero-title fade-in">Hartă interactivă a camping-urilor</h1>
+        <p class="hero-subtitle fade-in">
+          Explorează toate locațiile de camping din România pe hartă. Filtrează
+          după regiune, facilități și alte criterii pentru a găsi locul perfect
+          pentru aventura ta.
+        </p>
+      </div>
+    </section>
+
+    <!-- filters -->
+
+    <section class="filters-section">
+      <div class="container">
+        <div class="filters-container">
+          <div class="filter-group">
+            <h3 class="filter-title">Regiune</h3>
+            <div class="filter-control">
+              <select class="filter-select">
+                <option value="all">Toate regiunile</option>
+                <option value="transilvania">Transilvania</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <h3 class="filter-title">Facilități</h3>
+            <div class="checkbox-group">
+              <label class="checkbox-item">
+                <input type="checkbox" /> Wi-Fi
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" /> Parcare
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" /> Restaurant
+              </label>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <h3 class="filter-title">Preț/noapte</h3>
+            <div class="filter-control">
+              <div class="range-control">
+                <input type="range" min="0" max="300" step="10" value="150" />
+                <span class="range-value">≤ 150 lei</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <h3 class="filter-title">Rating minim</h3>
+            <div class="radio-group">
+              <label class="radio-item">
+                <input type="radio" name="rating" checked /> Toate
+              </label>
+              <label class="radio-item">
+                <input type="radio" name="rating" /> 3+
+              </label>
+              <label class="radio-item">
+                <input type="radio" name="rating" /> 4+
+              </label>
+              <label class="radio-item">
+                <input type="radio" name="rating" /> 4.5+
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; text-align: center">
+          <button class="btn btn-primary" style="margin-right: 1rem">
+            Aplică filtre
+          </button>
+          <button class="btn btn-outline">Resetează filtre</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <section style="padding: 0 0 2rem; background-color: var(--gray-50)">
+      <div class="container">
+        <div class="results-section">
+          <div class="results-header">
+            <h3 class="results-count">Locații găsite (123514)</h3>
+            <select>
+              <option>Sortează după relevanță</option>
+              <option>Sortează după rating</option>
+              <option>Sortează după preț</option>
+              <option>Sortează după distanță</option>
+            </select>
+          </div>
+
+          <div class="location-grid">
+            <div class="location-item">
+              <div class="location-name">Camping Transilvania</div>
+              <div class="location-info">
+                <span>Cluj-Napoca, Cluj</span>
+                <span class="location-rating">4.7 ⭐</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-section">
+      <div class="container">
+        <h2>Hartă interactivă</h2>
+        <div class="map-container" id="map">
+          <div class="map-placeholder">
+            <div>Hartă interactivă OpenStreetMap</div>
+          </div>
+
+          <div class="map-legend">
+            <div class="legend-item">
+              <div class="legend-color"></div>
+              <span>Camping Disponibil</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color"></div>
+              <span>Camping Ocupat</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color"></div>
+              <span>Camping Popular</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 2rem; text-align: center">
+          <p style="margin-bottom: 1rem; color: var(--gray-600)">
+            Nu ai găsit ce căutai? Trimite-ne un mesaj pentru a sugera noi
+            locații de camping.
+          </p>
+          <a href="contact.html" class="btn btn-outline">Contactează-ne</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-info">
+            <div class="footer-logo">GreenCamping🏕️</div>
+            <p class="footer-description">
+              Platforma ta pentru descoperirea și rezervarea campingurilor din
+              România.
+            </p>
+          </div>
+
+          <div class="social-links">
+            <a href="" class="social-link">Fb</a>
+            <a href="https://www.instagram.com/andreitod1/" class="social-link">
+              Ig
+            </a>
+            <a href="#" class="social-link">Tw</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; <span id="current-year"></span> GreenCamping</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

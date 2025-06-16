@@ -15,9 +15,29 @@ document.addEventListener("DOMContentLoaded", () => {
       mobileMenu.classList.remove("active");
     });
   }
+  const locationItems = document.querySelectorAll(".location-item");
+  locationItems.forEach((item) => {
+    item.addEventListener("click", function () {
+      locationItems.forEach((i) => (i.style.backgroundColor = ""));
+
+      this.style.backgroundColor = "rgba(116, 198, 157, 0.3)";
+      const locationName = this.querySelector(".location-name").textContent;
+      console.log(`Selected: ${locationName}`);
+
+      document.getElementById("map").scrollIntoView({ behavior: "smooth" });
+    });
+  });
+
+  const rangeSlider = document.querySelector('input[type="range"]');
+  const rangeValue = document.querySelector(".range-value");
+
+  if (rangeSlider && rangeValue) {
+    rangeSlider.addEventListener("input", function () {
+      rangeValue.textContent = `≤ ${this.value} lei`;
+    });
+  }
 
   const fadeElements = document.querySelectorAll(".fade-in");
-
   function checkFade() {
     fadeElements.forEach((element) => {
       const elementTop = element.getBoundingClientRect().top;
@@ -29,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
   checkFade();
+
   console.log("📍 DOM fully loaded, initializing map");
 
   const mapEl = document.getElementById("map");
@@ -53,8 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }).addTo(map);
 
   console.log("✔️ Tile-layer added.");
-
-  //
   fetch("/api/camps")
     .then((res) => res.json())
     .then((camps) => {
