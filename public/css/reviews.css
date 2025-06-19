@@ -1,0 +1,165 @@
+.reviews {
+  padding: 3rem 0;
+  background-color: var(--cream);
+  text-align: center;
+}
+
+.review-card {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--gray-200);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.review-author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.author-avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.author-info h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.author-info p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--gray-600);
+}
+
+.review-meta {
+  text-align: right;
+}
+
+.review-rating {
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--forest);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  justify-content: flex-end;
+}
+
+.review-date {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+}
+
+.review-camping {
+  background-color: var(--cream);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.camping-thumbnail {
+  width: 5rem;
+  height: 5rem;
+  border-radius: var(--border-radius);
+  object-fit: cover;
+}
+
+.camping-info h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.camping-info p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--gray-600);
+}
+
+.review-content {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.review-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.review-photo {
+  border-radius: var(--border-radius);
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+}
+
+.review-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--gray-200);
+  padding-top: 1rem;
+}
+
+.review-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.review-action {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--gray-600);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.review-action:hover {
+  color: var(--forest);
+}
+
+.review-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.review-filter {
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--gray-300);
+  cursor: pointer;
+  background: white;
+  transition: var(--transition);
+  font-size: 0.875rem;
+}
+
+.review-filter.active {
+  background-color: var(--forest);
+  color: white;
+  border-color: var(--forest);
+}
+
+.review-filter:hover:not(.active) {
+  border-color: var(--mint);
+  color: var(--forest);
+}
