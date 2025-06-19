@@ -17,21 +17,18 @@
   color: var(--forest);
 }
 
-/* wrapper-ul direct sub .filter-container */
 .filter-container > div {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
 }
 
-/* fiecare rând de filtre */
 .filter-row {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
 }
 
-/* grupurile de input-uri (select / checkbox) */
 .filter-row > div {
   flex: 1;
   min-width: 200px;
@@ -56,49 +53,33 @@
   background-color: white;
 }
 
-/* header-ul secţiunii */
-.campgrounds .section-header {
+.section-header {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   margin-bottom: 2rem;
 }
-.campgrounds .section-header.center {
+.section-header.center {
   align-items: center;
   text-align: center;
 }
 
-/* titlu și subtitlu (opțional, stilizează-le după gust) */
-.campgrounds .section-title {
+.section-title {
   font-size: 2rem;
   margin-bottom: 0.5rem;
 }
-.campgrounds .section-subtitle {
+.section-subtitle {
   font-size: 1rem;
   color: var(--gray-600);
 }
 
-/* grid de carduri */
-.campgrounds .camping-grid {
+.camping-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
 }
-/* la tabletă: 2 coloane */
-@media (min-width: 640px) {
-  .campgrounds .camping-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-/* la desktop: 3 coloane */
-@media (min-width: 1024px) {
-  .campgrounds .camping-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
 
-/* fiecare card */
-.campgrounds .camping-card {
+.camping-card {
   background-color: white;
   border: 1px solid var(--gray-200);
   border-radius: var(--border-radius);
@@ -108,42 +89,40 @@
   transition: var(--transition);
   height: 100%;
 }
-.campgrounds .camping-card:hover {
+.camping-card:hover {
   box-shadow: var(--shadow-lg);
 }
 
-/* imagine */
-.campgrounds .camping-image {
+.camping-image {
   aspect-ratio: 16/9;
   overflow: hidden;
 }
-.campgrounds .camping-image img {
+.camping-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
 }
-.campgrounds .camping-card:hover .camping-image img {
+.camping-card:hover .camping-image img {
   transform: scale(1.05);
 }
 
-/* header (nume + rating) */
-.campgrounds .camping-header {
+.camping-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   padding: 1rem;
   padding-bottom: 0.5rem;
 }
-.campgrounds .camping-name {
+.camping-name {
   font-size: 1.125rem;
   margin-bottom: 0.25rem;
 }
-.campgrounds .camping-location {
+.camping-location {
   font-size: 0.875rem;
   color: var(--gray-600);
 }
-.campgrounds .camping-rating {
+.camping-rating {
   background-color: var(--mint);
   color: var(--forest);
   font-weight: 700;
@@ -152,12 +131,11 @@
   font-size: 0.875rem;
 }
 
-/* conținut (descriere + tag-uri) */
-.campgrounds .camping-content {
+.camping-content {
   padding: 0 1rem 1rem;
   flex-grow: 1;
 }
-.campgrounds .camping-description {
+.camping-description {
   font-size: 0.875rem;
   margin-bottom: 1rem;
   display: -webkit-box;
@@ -165,12 +143,12 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.campgrounds .camping-tags {
+.camping-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
-.campgrounds .tag {
+.tag {
   background-color: rgba(116, 198, 157, 0.2);
   border: 1px solid rgba(116, 198, 157, 0.4);
   border-radius: 9999px;
@@ -179,19 +157,30 @@
   white-space: nowrap;
 }
 
-/* footer (preț + buton) */
-.campgrounds .camping-footer {
+.camping-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
   border-top: 1px solid var(--gray-200);
 }
-.campgrounds .camping-price {
+.camping-price {
   font-size: 1.25rem;
   font-weight: 700;
 }
-.campgrounds .camping-price span {
+.camping-price span {
   font-size: 0.875rem;
   font-weight: normal;
+}
+
+@media (min-width: 640px) {
+  .camping-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .camping-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

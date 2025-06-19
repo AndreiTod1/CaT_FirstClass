@@ -370,6 +370,18 @@ h6 {
 }
 
 @media (min-width: 1024px) {
+  .desktop-nav {
+    display: block;
+  }
+
+  .header-actions {
+    display: flex;
+  }
+
+  .mobile-menu-btn {
+    display: none;
+  }
+
   .filters-container {
     grid-template-columns: repeat(4, 1fr);
   }
