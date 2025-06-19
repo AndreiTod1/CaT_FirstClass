@@ -1,0 +1,197 @@
+/* ========== FILTRE ========== */
+.filter-section {
+  padding: 2rem 0;
+  background-color: white;
+}
+
+.filter-container {
+  padding: 1.5rem;
+  background-color: var(--cream);
+  border-radius: var(--border-radius);
+  margin-bottom: 2rem;
+}
+
+.filter-container h2 {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  color: var(--forest);
+}
+
+/* wrapper-ul direct sub .filter-container */
+.filter-container > div {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+/* fiecare rând de filtre */
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* grupurile de input-uri (select / checkbox) */
+.filter-row > div {
+  flex: 1;
+  min-width: 200px;
+}
+
+.filter-row > div > label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.filter-row > div > select {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--gray-300);
+}
+
+/* ========== CAMPINGURI ========== */
+.campgrounds {
+  padding: 2rem 0 4rem;
+  background-color: white;
+}
+
+/* header-ul secţiunii */
+.campgrounds .section-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+.campgrounds .section-header.center {
+  align-items: center;
+  text-align: center;
+}
+
+/* titlu și subtitlu (opțional, stilizează-le după gust) */
+.campgrounds .section-title {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+.campgrounds .section-subtitle {
+  font-size: 1rem;
+  color: var(--gray-600);
+}
+
+/* grid de carduri */
+.campgrounds .camping-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+/* la tabletă: 2 coloane */
+@media (min-width: 640px) {
+  .campgrounds .camping-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+/* la desktop: 3 coloane */
+@media (min-width: 1024px) {
+  .campgrounds .camping-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* fiecare card */
+.campgrounds .camping-card {
+  background-color: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition);
+  height: 100%;
+}
+.campgrounds .camping-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+/* imagine */
+.campgrounds .camping-image {
+  aspect-ratio: 16/9;
+  overflow: hidden;
+}
+.campgrounds .camping-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.campgrounds .camping-card:hover .camping-image img {
+  transform: scale(1.05);
+}
+
+/* header (nume + rating) */
+.campgrounds .camping-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1rem;
+  padding-bottom: 0.5rem;
+}
+.campgrounds .camping-name {
+  font-size: 1.125rem;
+  margin-bottom: 0.25rem;
+}
+.campgrounds .camping-location {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+}
+.campgrounds .camping-rating {
+  background-color: var(--mint);
+  color: var(--forest);
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+/* conținut (descriere + tag-uri) */
+.campgrounds .camping-content {
+  padding: 0 1rem 1rem;
+  flex-grow: 1;
+}
+.campgrounds .camping-description {
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.campgrounds .camping-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.campgrounds .tag {
+  background-color: rgba(116, 198, 157, 0.2);
+  border: 1px solid rgba(116, 198, 157, 0.4);
+  border-radius: 9999px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+/* footer (preț + buton) */
+.campgrounds .camping-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-top: 1px solid var(--gray-200);
+}
+.campgrounds .camping-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.campgrounds .camping-price span {
+  font-size: 0.875rem;
+  font-weight: normal;
+}
