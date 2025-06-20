@@ -1,7 +1,7 @@
 // src/controllers/auth.js
-const { google } = require('googleapis');
-const db = require('../services/db');
-const { sign } = require('../services/jwt');
+const { google } = require("googleapis");
+const db = require("../services/db");
+const { sign } = require("../services/jwt");
 
 // Initialize OAuth2 client
 const oauth2Client = new google.auth.OAuth2(
@@ -12,58 +12,60 @@ const oauth2Client = new google.auth.OAuth2(
 
 function registerAuthRoutes(router) {
   // Start Google OAuth2 flow
-  router.add('GET', /^\/api\/auth\/google$/, (req, res) => {
+  router.add("GET", /^\/api\/auth\/google$/, (req, res) => {
     const authUrl = oauth2Client.generateAuthUrl({
-      access_type: 'offline',     // pentru refresh_token
-      scope: ['openid', 'email', 'profile'],
-      prompt: 'select_account'
+      access_type: "offline", // pentru refresh_token
+      scope: ["openid", "email", "profile"],
+      prompt: "select_account",
     });
     res.writeHead(302, { Location: authUrl });
     res.end();
   });
 
   // Callback-ul Google
-  router.add('GET', /^\/api\/auth\/google\/callback/, async (req, res) => {
+  router.add("GET", /^\/api\/auth\/google\/callback/, async (req, res) => {
     try {
       const fullUrl = new URL(req.url, `http://${req.headers.host}`);
-      const code = fullUrl.searchParams.get('code');
-      if (!code) throw new Error('No code in callback');
+      const code = fullUrl.searchParams.get("code");
+      if (!code) throw new Error("No code in callback");
 
       const { tokens } = await oauth2Client.getToken(code);
       oauth2Client.setCredentials(tokens);
 
-      const oauth2 = google.oauth2({ auth: oauth2Client, version: 'v2' });
+      const oauth2 = google.oauth2({ auth: oauth2Client, version: "v2" });
       const { data: userinfo } = await oauth2.userinfo.get();
 
       const user = await db.findOrCreateOAuthUser({
-        provider: 'google',
+        provider: "google",
         oauth_id: userinfo.id,
-        email: userinfo.email
+        email: userinfo.email,
       });
 
       const jwtToken = sign({ id: user.id, role: user.role });
 
       res.writeHead(302, {
-        'Set-Cookie': `token=${jwtToken}; HttpOnly; Path=/; Max-Age=${7*24*60*60}`,
-        'Location': '/'
+        "Set-Cookie": `token=${jwtToken}; HttpOnly; Path=/; Max-Age=${
+          7 * 24 * 60 * 60
+        }`,
+        Location: "/",
       });
       res.end();
     } catch (err) {
-      console.error('OAuth callback error:', err);
-      res.writeHead(500, { 'Content-Type': 'text/plain' });
-      res.end('Authentication error');
+      console.error("OAuth callback error:", err);
+      res.writeHead(500, { "Content-Type": "text/plain" });
+      res.end("Authentication error");
     }
   });
 }
 
 function registerLogoutRoute(router) {
-  router.add('POST', /^\/api\/auth\/logout$/, (req, res) => {
+  router.add("POST", /^\/api\/auth\/logout$/, (req, res) => {
     res.writeHead(200, {
-      'Set-Cookie': 'token=; HttpOnly; Path=/; Max-Age=0',
-      'Content-Type': 'application/json'
+      "Set-Cookie": "token=; HttpOnly; Path=/; Max-Age=0",
+      "Content-Type": "application/json",
     });
-    res.end(JSON.stringify({ ok: true, message: 'Logged out' }));
+    res.end(JSON.stringify({ ok: true, message: "Logged out" }));
   });
 }
 
-module.exports = {registerAuthRoutes,registerLogoutRoute};
+module.exports = { registerAuthRoutes, registerLogoutRoute };
