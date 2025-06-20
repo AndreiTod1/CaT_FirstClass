@@ -1,20 +1,18 @@
-const { Pool } = require('pg');
+const { Pool } = require("pg");
 const pool = new Pool({ connectionString: process.env.PG_CONN });
-
 
 async function findOrCreateOAuthUser({ provider, oauth_id, email }) {
   let { rows } = await pool.query(
-    'SELECT * FROM users WHERE oauth_provider = $1 AND oauth_id = $2',
+    "SELECT * FROM users WHERE oauth_provider = $1 AND oauth_id = $2",
     [provider, oauth_id]
   );
   if (rows.length) {
     return rows[0];
   }
 
-  ({ rows } = await pool.query(
-    'SELECT * FROM users WHERE email = $1',
-    [email]
-  ));
+  ({ rows } = await pool.query("SELECT * FROM users WHERE email = $1", [
+    email,
+  ]));
   if (rows.length) {
     const existing = rows[0];
     const updateRes = await pool.query(
@@ -35,5 +33,5 @@ async function findOrCreateOAuthUser({ provider, oauth_id, email }) {
 
 module.exports = {
   query: (text, params) => pool.query(text, params),
-  findOrCreateOAuthUser
+  findOrCreateOAuthUser,
 };
