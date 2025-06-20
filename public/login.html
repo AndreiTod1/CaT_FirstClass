@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GreenCamping - Descoperă locuri de camping</title>
+
+    <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/login.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- header -->
+    <header class="header">
+      <div class="container header-content">
+        <a href="index.html" class="logo">
+          GreenCamping
+          <span class="logo-emoji">
+            <img src="images/logo.png" width="50" height="50" />
+          </span>
+        </a>
+        <nav class="desktop-nav">
+          <ul>
+            <li><a href="index.html" class="active">Acasă</a></li>
+            <li><a href="campgrounds.html">Camping-uri</a></li>
+            <li><a href="map.html">Hartă</a></li>
+            <li><a href="reviews.html">Recenzii</a></li>
+            <li><a href="about.html">Despre</a></li>
+          </ul>
+        </nav>
+        <div class="header-actions">
+          <a class="btn btn-primary" href="login.html">Conectare</a>
+        </div>
+        <button class="mobile-menu-btn">☰</button>
+      </div>
+
+      <div class="mobile-menu" id="mobile-menu">
+        <div class="container">
+          <div class="mobile-menu-header">
+            <a href="index.html" class="logo">GreenCamping</a>
+            <button class="close-menu">✕</button>
+          </div>
+          <nav class="mobile-nav">
+            <ul>
+              <li><a href="index.html" class="active">Acasă</a></li>
+              <li><a href="campgrounds.html">Camping-uri</a></li>
+              <li><a href="map.html">Hartă</a></li>
+              <li><a href="reviews.html">Recenzii</a></li>
+              <li><a href="about.html">Despre</a></li>
+              <li><a href="login.html">Conectare</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <!-- Login Section -->
+    <section class="section">
+      <div class="container">
+        <div class="auth-container">
+          <h1 class="auth-title">Conectare</h1>
+
+          <form id="login-form">
+            <div class="form-group">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                id="email"
+                class="form-input"
+                placeholder="exemplu@email.com"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="form-label">Parolă</label>
+              <input
+                type="password"
+                id="password"
+                class="form-input"
+                placeholder="Parolă"
+                required
+              />
+            </div>
+
+            <div class="remember-forgot">
+              <label class="remember-me">
+                <input type="checkbox" id="remember" />
+                <span>Ține-mă minte</span>
+              </label>
+              <a href="#" class="forgot-password">Am uitat parola</a>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%">
+              Conectare
+            </button>
+          </form>
+          <div></div>
+          <div class="auth-footer">
+            Nu ai încă un cont? <a href="register.html">Înregistrează-te</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-info">
+            <div class="footer-logo">
+              GreenCamping
+              <span><img src="images/logo.png" width="50" height="50" /></span>
+            </div>
+            <p class="footer-description">
+              Platforma ta pentru descoperirea și rezervarea campingurilor din
+              România.
+            </p>
+          </div>
+
+          <div class="social-links">
+            <a href="" class="social-link">Fb</a>
+            <a href="https://www.instagram.com/andreitod1/" class="social-link">
+              Ig
+            </a>
+            <a href="#" class="social-link">Tw</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; <span id="current-year"></span> GreenCamping</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
