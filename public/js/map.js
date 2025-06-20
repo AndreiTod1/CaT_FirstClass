@@ -1,33 +1,5 @@
 // public/js/map.js
 document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("current-year").textContent =
-    new Date().getFullYear();
-  const mobileMenuBtn = document.querySelector(".mobile-menu-btn");
-  const closeMenuBtn = document.querySelector(".close-menu");
-  const mobileMenu = document.getElementById("mobile-menu");
-
-  if (mobileMenuBtn && closeMenuBtn && mobileMenu) {
-    mobileMenuBtn.addEventListener("click", function () {
-      mobileMenu.classList.add("active");
-    });
-
-    closeMenuBtn.addEventListener("click", function () {
-      mobileMenu.classList.remove("active");
-    });
-  }
-  const locationItems = document.querySelectorAll(".location-item");
-  locationItems.forEach((item) => {
-    item.addEventListener("click", function () {
-      locationItems.forEach((i) => (i.style.backgroundColor = ""));
-
-      this.style.backgroundColor = "rgba(116, 198, 157, 0.3)";
-      const locationName = this.querySelector(".location-name").textContent;
-      console.log(`Selected: ${locationName}`);
-
-      document.getElementById("map").scrollIntoView({ behavior: "smooth" });
-    });
-  });
-
   const rangeSlider = document.querySelector('input[type="range"]');
   const rangeValue = document.querySelector(".range-value");
 
@@ -36,21 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
       rangeValue.textContent = `≤ ${this.value} lei`;
     });
   }
-
-  const fadeElements = document.querySelectorAll(".fade-in");
-  function checkFade() {
-    fadeElements.forEach((element) => {
-      const elementTop = element.getBoundingClientRect().top;
-      const elementBottom = element.getBoundingClientRect().bottom;
-
-      if (elementTop < window.innerHeight && elementBottom > 0) {
-        element.classList.add("visible");
-      }
-    });
-  }
-  checkFade();
-
-  console.log("📍 DOM fully loaded, initializing map");
 
   const mapEl = document.getElementById("map");
   if (!mapEl) {
