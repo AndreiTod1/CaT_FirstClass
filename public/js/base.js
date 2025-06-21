@@ -35,46 +35,55 @@ document.addEventListener("DOMContentLoaded", () => {
 async function fetchUserAndRender() {
   try {
     const resp = await fetch("/api/auth/me", { credentials: "include" });
-
     if (resp.status === 401) {
-      console.log("No user session, skipping render.");
+      // nu e logat → lăsăm loginBtn vizibil, restul ascunse implicit
       return;
     }
-
     const data = await resp.json();
     if (data.ok && data.user) {
-      console.log("User logat:", data.user);
-      renderUserBox(data.user);
+      showUser(data.user);
+      console.log("User fetched and rendered:", data.user);
     }
   } catch (err) {
     console.warn("Eroare la fetchUserAndRender:", err);
   }
 }
 
-function renderUserBox(user) {
-  const loginBtn = document.querySelector(".header-actions a.btn-primary");
-  if (loginBtn) loginBtn.remove();
+function showUser(user) {
+  const loginBtn = document.getElementById("loginBtn");
+  if (loginBtn) loginBtn.style.display = "none";
 
-  const container = document.querySelector(".header-content");
-  if (!container) return;
+  const userBox = document.getElementById("userBox");
+  const userName = document.getElementById("userName");
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (userBox && userName && logoutBtn) {
+    userName.textContent = user.name || user.email.split("@")[0];
+    userBox.style.display = "flex";
+    logoutBtn.addEventListener("click", doLogout);
+  }
 
-  const box = document.createElement("div");
-  box.className = "user-box";
-  box.innerHTML = `
-    <span class="user-name">Bun venit, ${
-      user.name || user.email.split("@")[0]
-    }</span>
-    <button id="logout-btn" class="btn-logout">Ieșire</button>
-  `;
-  container.appendChild(box);
+  const mobileInfo = document.getElementById("mobileUserInfo");
+  const mobileName = document.getElementById("mobileUserName");
+  const mobileLogout = document.getElementById("mobileLogoutBtn");
+  if (mobileInfo && mobileName && mobileLogout) {
+    mobileName.textContent = user.name || user.email.split("@")[0];
+    mobileInfo.style.display = "flex";
+    mobileLogout.addEventListener("click", doLogout);
+  }
 
-  document.getElementById("logout-btn").addEventListener("click", async () => {
-    await fetch("/api/auth/logout", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-    });
+  if (user.role == "admin") {
+    console.log("User is admin, showing admin menu");
+    const adminDesk = document.getElementById("adminMenuDesktop");
+    const adminMobile = document.getElementById("adminMenuMobile");
+    if (adminDesk) adminDesk.style.display = "inline-block";
+    if (adminMobile) adminMobile.style.display = "block";
+  }
+}
 
-    window.location.reload();
-  });
+function doLogout() {
+  fetch("/api/auth/logout", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+  }).then(() => window.location.reload());
 }
