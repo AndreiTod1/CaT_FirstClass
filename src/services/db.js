@@ -31,7 +31,13 @@ async function findOrCreateOAuthUser({ provider, oauth_id, email }) {
   return rows[0];
 }
 
+async function getUserById(id) {
+  const result = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+  return result.rows[0];
+}
+
 module.exports = {
   query: (text, params) => pool.query(text, params),
   findOrCreateOAuthUser,
+  getUserById,
 };

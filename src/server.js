@@ -10,6 +10,7 @@ const registerReviews = require("./controllers/reviews");
 const {
   registerAuthRoutes,
   registerLogoutRoute,
+  registerMeRoute,
 } = require("./controllers/auth");
 
 async function start() {
@@ -18,6 +19,7 @@ async function start() {
   //oauth router
   registerAuthRoutes(router);
   registerLogoutRoute(router);
+  registerMeRoute(router);
 
   // Health check endpoint
   router.add("GET", /^\/api\/health$/, (req, res) => {
