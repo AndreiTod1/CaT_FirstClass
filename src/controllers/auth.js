@@ -1,7 +1,7 @@
 // src/controllers/auth.js
 const { google } = require("googleapis");
 const db = require("../services/db");
-const { sign } = require("../services/jwt");
+const { sign, verify } = require("../services/jwt");
 
 // Initialize OAuth2 client
 const oauth2Client = new google.auth.OAuth2(
@@ -9,6 +9,16 @@ const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_SECRET,
   process.env.GOOGLE_REDIRECT
 );
+
+function parseCookies(cookieHeader = "") {
+  return cookieHeader
+    .split(";")
+    .map((v) => v.split("="))
+    .reduce((acc, [k, v]) => {
+      acc[k.trim()] = decodeURIComponent(v);
+      return acc;
+    }, {});
+}
 
 function registerAuthRoutes(router) {
   // Start Google OAuth2 flow
@@ -68,4 +78,45 @@ function registerLogoutRoute(router) {
   });
 }
 
-module.exports = { registerAuthRoutes, registerLogoutRoute };
+function registerMeRoute(router) {
+  router.add("GET", /^\/api\/auth\/me$/, async (req, res) => {
+    try {
+      const cookies = parseCookies(req.headers.cookie);
+      const token = cookies.token;
+      if (!token) {
+        res.writeHead(401, { "Content-Type": "application/json" });
+        return res.end(
+          JSON.stringify({ ok: false, message: "Nu ești autentificat." })
+        );
+      }
+
+      let payload;
+      try {
+        payload = verify(token);
+      } catch (err) {
+        res.writeHead(401, { "Content-Type": "application/json" });
+        return res.end(
+          JSON.stringify({ ok: false, message: "Token invalid." })
+        );
+      }
+
+      const user = await db.getUserById(payload.id);
+      if (!user) {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        return res.end(
+          JSON.stringify({ ok: false, message: "Utilizator negăsit." })
+        );
+      }
+
+      const { id, email, role, name } = user;
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ ok: true, user: { id, email, role, name } }));
+    } catch (err) {
+      console.error("Error în /api/auth/me:", err);
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ ok: false, message: "Eroare server." }));
+    }
+  });
+}
+
+module.exports = { registerAuthRoutes, registerLogoutRoute, registerMeRoute };
