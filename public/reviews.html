@@ -27,7 +27,7 @@
         <a href="index.html" class="logo">
           GreenCamping
           <span class="logo-emoji">
-            <img src="images/logo.png" width="50" height="50">
+            <img src="images/logo.png" width="50" height="50" />
           </span>
         </a>
         <nav class="desktop-nav">
@@ -37,12 +37,23 @@
             <li><a href="map.html">Hartă</a></li>
             <li><a href="reviews.html">Recenzii</a></li>
             <li><a href="about.html">Despre</a></li>
+            <li>
+              <a href="admin.html" id="adminMenuDesktop" style="display: none"
+                >🔧 Admin Panel</a
+              >
+            </li>
           </ul>
         </nav>
-        <div class="header-actions">
-          <a class="btn btn-primary" href="login.html">Conectare</a>
+        <div class="small-screen-box">
+          <div class="user-box" id="userBox" style="display: none">
+            <span class="user-name" id="userName"></span>
+            <button id="logoutBtn" class="btn-logout">Logout</button>
+          </div>
+          <a href="login.html" class="btn btn-primary" id="loginBtn"
+            >Conectare</a
+          >
+          <div><button class="mobile-menu-btn">☰</button></div>
         </div>
-        <button class="mobile-menu-btn">☰</button>
       </div>
 
       <!-- mobile Menu -->
@@ -59,7 +70,11 @@
               <li><a href="map.html">Hartă</a></li>
               <li><a href="reviews.html">Recenzii</a></li>
               <li><a href="about.html">Despre</a></li>
-              <li><a href="login.html">Conectare</a></li>
+              <li>
+                <a href="admin.html" id="adminMenuMobile" style="display: none"
+                  >🔧 Admin Panel</a
+                >
+              </li>
             </ul>
           </nav>
         </div>
