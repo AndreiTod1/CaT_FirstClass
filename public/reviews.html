@@ -12,6 +12,7 @@
       rel="stylesheet"
     />
     <script src="js/base.js" defer></script>
+    <script src="js/reviews.js" defer></script>
 
     <!-- leatflet -->
     <link
@@ -81,88 +82,48 @@
       </div>
     </header>
 
+    <!-- reviews -->
 
     <section class="reviews">
-        <div class="container">
-          <div class="section-header">
-            <h1 class="section-title">Recenzii de la camperi</h1>
-            <p class="section-subtitle">Descoperă experiențele autentice ale celor care au vizitat locațiile de camping</p>
-          </div>
-          
-          <div class="review-filters fade-in">
-            <button class="review-filter active">Toate recenziile</button>
-            <button class="review-filter">Cele mai recente</button>
-            <button class="review-filter">Cele mai apreciate</button>
-            <button class="review-filter">Rating 5★</button>
-            <button class="review-filter">Cu fotografii</button>
-          </div>
-          
-          <!-- review -->
-          <div class="review-card fade-in">
-            <div class="review-header">
-              <div class="review-author">
-                <img src="https://randomuser.me/api/portraits/women/4.jpg" class="author-avatar">
-                <div class="author-info">
-                  <h3>Andreea Mureșan</h3>
-                  <p>15 recenzii</p>
-                </div>
-              </div>
-              <div class="review-meta">
-                <div class="review-rating">
-                  <span>5.0</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                  </svg>
-                </div>
-                <div class="review-date">10 iulie 2023</div>
-              </div>
-            </div>
-            
-            <div class="review-camping">
-              <img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Camping Transilvania" class="camping-thumbnail">
-              <div class="camping-info">
-                <h3>Camping Transilvania</h3>
-                <p>Cluj-Napoca, Cluj</p>
-              </div>
-            </div>
-            
-            <div class="review-content">
-              <p>Am petrecut un weekend minunat la Camping Transilvania! Locația este superbă, cu priveliști uimitoare spre munți. Facilitățile sunt curate și bine întreținute. Personalul a fost foarte amabil și ne-a oferit sfaturi excelente pentru drumeții în împrejurimi. Cabanele sunt confortabile, iar zonele comune sunt perfect amenajate pentru socializare și relaxare. Cu siguranță vom reveni!</p>
-            </div>
-            
-            <div class="review-photos">
-              <img src="https://images.unsplash.com/photo-1537225228614-56cc3556d7ed?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Imagine recenzie 1" class="review-photo">
-              <img src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80" alt="Imagine recenzie 2" class="review-photo">
-              <img src="https://images.unsplash.com/photo-1464547323744-4edd0cd0c746?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Imagine recenzie 3" class="review-photo">
-            </div>
-            
-            <div class="review-footer">
-              <div class="review-actions">
-                <div class="review-action">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
-                  </svg>
-                  <span>42 aprecieri</span>
-                </div>
-                <div class="review-action">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                  </svg>
-                  <span>8 comentarii</span>
-                </div>
-              </div>
-              <a href="#" class="btn btn-sm btn-outline">Vezi toate fotografiile</a>
-            </div>
-          </div>
-        </section>
+      <div class="container">
+        <div class="section-header">
+          <h1 class="section-title">Recenzii de la camperi</h1>
+          <p class="section-subtitle">
+            Descoperă experiențele autentice ale celor care au vizitat locațiile
+            de camping
+          </p>
+        </div>
+
+        <!-- filtre -->
+        <div class="review-filters fade-in">
+          <button class="review-filter active" data-filter="all">
+            Toate recenziile
+          </button>
+          <button class="review-filter" data-filter="recent">
+            Cele mai recente
+          </button>
+          <button class="review-filter" data-filter="top">
+            Cele mai apreciate
+          </button>
+          <button class="review-filter" data-filter="five">Rating 5★</button>
+          <button class="review-filter" data-filter="photos">
+            Cu fotografii
+          </button>
+        </div>
+
+        <!-- umplem din JS -->
+        <div id="reviewsList" class="reviews-list fade-in"></div>
+      </div>
+    </section>
 
     <!-- footer -->
     <footer class="footer">
       <div class="container">
         <div class="footer-content">
           <div class="footer-info">
-            <div class="footer-logo">GreenCamping
-                <span><img src="images/logo.png" width="50" height="50"></span>
+            <div class="footer-logo">
+              GreenCamping
+              <span><img src="images/logo.png" width="50" height="50" /></span>
             </div>
             <p class="footer-description">
               Platforma ta pentru descoperirea și rezervarea campingurilor din
