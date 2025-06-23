@@ -154,14 +154,14 @@
                   </div>
                   <div class="form-group">
                     <label for="campgroundLocation">Locație</label>
-                    <input type="text" id="campgroundLocation" required />
+                    <input type="text" id="campgroundLocation" />
                   </div>
                 </div>
 
                 <div class="form-grid">
                   <div class="form-group">
                     <label for="campgroundRegion">Regiune</label>
-                    <select id="campgroundRegion" required>
+                    <select id="campgroundRegion">
                       <option value="">Selectează regiunea</option>
                       <option value="transilvania">Transilvania</option>
                       <option value="muntenia">Muntenia</option>
@@ -195,50 +195,63 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="campgroundRating">Rating (1-5)</label>
+                  <label for="campgroundLatitude">Latitudine</label>
                   <input
                     type="number"
-                    id="campgroundRating"
+                    id="campgroundLatitude"
+                    step="any"
+                    name="campgroundLatitude"
                     required
-                    min="1"
-                    max="5"
-                    step="0.1"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="campgroundLongitude">Longitudine</label>
+                  <input
+                    type="number"
+                    id="campgroundLongitude"
+                    step="any"
+                    name="campgroundLongitude"
+                    required
                   />
                 </div>
 
                 <div class="form-group">
                   <label for="campgroundDescription">Descriere</label>
-                  <textarea
-                    id="campgroundDescription"
-                    required
-                    rows="4"
-                  ></textarea>
+                  <textarea id="campgroundDescription" rows="4"></textarea>
                 </div>
 
                 <div class="form-group">
                   <label for="campgroundImage">URL Imagine</label>
-                  <input type="url" id="campgroundImage" required />
+                  <input type="url" id="campgroundImage" />
                 </div>
 
                 <div class="form-group">
                   <label>Facilități</label>
-                  <div class="facilities-grid">
-                    <div class="facility-checkbox">
-                      <input type="checkbox" id="wifi" value="wifi" />
-                      <label for="wifi">Wi-Fi</label>
-                    </div>
-                    <div class="facility-checkbox">
-                      <input type="checkbox" id="showers" value="showers" />
-                      <label for="showers">Dușuri</label>
-                    </div>
-                    <div class="facility-checkbox">
-                      <input type="checkbox" id="bbq" value="bbq" />
-                      <label for="bbq">Grătar</label>
-                    </div>
-                    <div class="facility-checkbox">
-                      <input type="checkbox" id="parking" value="parking" />
-                      <label for="parking">Parcare</label>
-                    </div>
+                  <div class="facilities-list">
+                    <label class="facility-item">
+                      <input type="checkbox" name="facilities" value="wifi" />
+                      <span>Wi-Fi</span>
+                    </label>
+                    <label class="facility-item">
+                      <input
+                        type="checkbox"
+                        name="facilities"
+                        value="showers"
+                      />
+                      <span>Dușuri</span>
+                    </label>
+                    <label class="facility-item">
+                      <input type="checkbox" name="facilities" value="bbq" />
+                      <span>Grătar</span>
+                    </label>
+                    <label class="facility-item">
+                      <input
+                        type="checkbox"
+                        name="facilities"
+                        value="parking"
+                      />
+                      <span>Parcare</span>
+                    </label>
                   </div>
                 </div>
 

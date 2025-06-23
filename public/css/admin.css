@@ -200,17 +200,23 @@
   margin-top: 2rem;
 }
 
-.facilities-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+.facilities-list {
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
   margin-top: 0.5rem;
 }
 
-.facility-checkbox {
+.facility-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: rem;
+}
+
+.facility-item input {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
 }
 
 .status-badge {
@@ -317,5 +323,19 @@
   .data-table th,
   .data-table td {
     padding: 0.75rem 0.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .data-table td:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  .data-table td:last-child .action-btn {
+    display: block;
+    width: 100%;
+    margin: 0;
   }
 }
