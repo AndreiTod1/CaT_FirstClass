@@ -19,6 +19,11 @@ async function getAllCamps(req, res) {
       values.push(searchParams.get("region"));
     }
 
+    if (searchParams.has("type")) {
+      clauses.push(`c.type = $${idx++}`);
+      values.push(searchParams.get("type"));
+    }
+
     if (searchParams.has("price")) {
       clauses.push(`c.price <= $${idx++}`);
       values.push(Number(searchParams.get("price")));
@@ -29,6 +34,8 @@ async function getAllCamps(req, res) {
       clauses.push("c.parking IS TRUE");
     if (searchParams.get("barbecue") === "true")
       clauses.push("c.barbecue IS TRUE");
+    if (searchParams.get("shower") === "true") clauses.push("c.shower IS TRUE");
+    if (searchParams.get("status") === "true") clauses.push("c.status IS TRUE");
 
     if (searchParams.has("minRating")) {
       clauses.push(`COALESCE(r.avg_rating,0) >= $${idx++}`);

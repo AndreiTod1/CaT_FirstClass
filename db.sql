@@ -1,4 +1,4 @@
-CREATE TYPE camp_site_type   AS ENUM ('tent', 'rv', 'cabins', 'glamping');
+CREATE TYPE camp_site_type   AS ENUM ('tent', 'rv', 'cabin', 'glamping');
 CREATE TYPE booking_status   AS ENUM ('pending','confirmed','cancelled','rejected','completed');
 
 CREATE TABLE users (
@@ -75,7 +75,7 @@ VALUES
 ('Cabana Piatra Craiului',
  'Casute alpine din lemn',
  45.553901, 25.277612,  18,
- 'Transilvania', 150.00, 'cabins',
+ 'Transilvania', 150.00, 'cabin',
  true,  true,  false, true, false),
 
 ('Glamping Sunflower Fields',

@@ -6,12 +6,13 @@
     <title>GreenCamping - Descoperă locuri de camping</title>
 
     <link rel="stylesheet" href="./css/base.css" />
-    <link rel="stylesheet" href="./css/login.css" />
+    <link rel="stylesheet" href="./css/camps.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
       rel="stylesheet"
     />
     <script src="js/base.js" defer></script>
+    <script src="js/camps.js" defer></script>
   </head>
   <body>
     <!-- header -->
@@ -26,7 +27,7 @@
         <nav class="desktop-nav">
           <ul>
             <li><a href="index.html" class="active">Acasă</a></li>
-            <li><a href="camps.html">Camping-uri</a></li>
+            <li><a href="campgrounds.html">Camping-uri</a></li>
             <li><a href="map.html">Hartă</a></li>
             <li><a href="reviews.html">Recenzii</a></li>
             <li><a href="about.html">Despre</a></li>
@@ -47,7 +48,7 @@
           <nav class="mobile-nav">
             <ul>
               <li><a href="index.html" class="active">Acasă</a></li>
-              <li><a href="camps.html">Camping-uri</a></li>
+              <li><a href="campgrounds.html">Camping-uri</a></li>
               <li><a href="map.html">Hartă</a></li>
               <li><a href="reviews.html">Recenzii</a></li>
               <li><a href="about.html">Despre</a></li>
@@ -58,62 +59,75 @@
       </div>
     </header>
 
-    <!-- Login Section -->
-    <section class="section">
+    <section class="filter-section">
       <div class="container">
-        <div class="auth-container">
-          <h1 class="auth-title">Conectare</h1>
+        <form id="filtersForm" class="filter-container">
+          <h2>Filtrează camping-urile</h2>
 
-          <form id="login-form">
-            <div class="form-group">
-              <label for="email" class="form-label">Email</label>
-              <input
-                type="email"
-                id="email"
-                class="form-input"
-                placeholder="exemplu@email.com"
-                required
-              />
+          <div>
+            <!-- rand 1 -->
+            <div class="filter-row">
+              <div class="filter-group">
+                <label>Regiune</label>
+                <select name="region">
+                  <option value="">Toate regiunile</option>
+                  <option value="transilvania">Transilvania</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label>Tip camping</label>
+                <select name="type">
+                  <option value="">Toate tipurile</option>
+                  <option value="tent">Corturi</option>
+                  <option value="cabin">Cabane</option>
+                  <option value="rv">Rulote</option>
+                  <option value="glamping">Glamping</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label>Preț</label>
+                <select name="price">
+                  <option value="">Orice preț</option>
+                  <option value="budget">Economic (sub 100 lei)</option>
+                  <option value="mid">Mediu (sub 200 lei)</option>
+                  <option value="premium">Premium (sub 1000 lei)</option>
+                </select>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="password" class="form-label">Parolă</label>
-              <input
-                type="password"
-                id="password"
-                class="form-input"
-                placeholder="Parolă"
-                required
-              />
-            </div>
+            <!-- rand 2 -->
+            <div class="filter-row">
+              <div class="filter-group">
+                <label>Facilități</label>
+                <div class="checkbox-group">
+                  <label><input type="checkbox" name="wifi" /> Wi-Fi</label>
+                  <label><input type="checkbox" name="shower" /> Dușuri</label>
+                  <label
+                    ><input type="checkbox" name="parking" /> Parcare</label
+                  >
+                  <label
+                    ><input type="checkbox" name="barbecue" /> Grătar</label
+                  >
+                </div>
+              </div>
 
-            <div class="remember-forgot">
-              <label class="remember-me">
-                <input type="checkbox" id="remember" />
-                <span>Ține-mă minte</span>
-              </label>
-              <a href="#" class="forgot-password">Am uitat parola</a>
+              <div class="filter-group filter-actions" style="flex: 0 0 auto">
+                <button class="btn btn-primary" type="submit">
+                  Aplică filtre
+                </button>
+              </div>
             </div>
-
-            <button type="submit" class="btn btn-primary" style="width: 100%">
-              Conectare
-            </button>
-          </form>
-          <div></div>
-          <div class="auth-footer">
-            Nu ai încă un cont? <a href="register.html">Înregistrează-te</a>
           </div>
-        </div>
+        </form>
+      </div>
+    </section>
 
-        <div class="social-auth">
-          <div class="social-auth-title">Sau conectează-te cu</div>
-          <div class="social-buttons">
-            <a href="/api/auth/google">
-              <button class="social-button social-google">
-                <img src="images/google.png" /></button
-            ></a>
-          </div>
-        </div>
+    <!-- campings -->
+    <section class="campings">
+      <div class="container">
+        <div class="camping-grid"></div>
       </div>
     </section>
 
