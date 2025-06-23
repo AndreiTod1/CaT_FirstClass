@@ -1,6 +1,3 @@
-// js/admin.js
-
-// expunem global functiile apelate inline
 window.showTab = showTab;
 window.resetForm = resetForm;
 window.closeModal = closeModal;
@@ -14,7 +11,7 @@ window.logout = logout;
 var campgrounds = [];
 var users = [];
 
-// 0. initializare pe pagina de admin
+// initializare pe pagina de admin
 document.addEventListener("DOMContentLoaded", function () {
   if (!document.querySelector(".admin-content")) return;
 
@@ -42,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .catch(function () {});
 });
 
-// 1. verificare admin
+// verificare admin
 async function checkAdminAuth() {
   var res = await fetch("/api/auth/me", { credentials: "include" });
   var data = await res.json();
@@ -54,7 +51,7 @@ async function checkAdminAuth() {
   return data.user;
 }
 
-// 2. afisare user in navbar
+// afisare user in navbar
 function showUser(user) {
   var loginBtn = document.getElementById("loginBtn");
   if (loginBtn) loginBtn.parentNode.removeChild(loginBtn);
@@ -78,7 +75,7 @@ function showUser(user) {
   }
 }
 
-// 3. logout
+// logout
 function logout() {
   fetch("/api/auth/logout", { method: "POST", credentials: "include" }).finally(
     function () {
@@ -87,7 +84,7 @@ function logout() {
   );
 }
 
-// 4. tab-uri
+// tab-uri
 function showTab(tabName, btn) {
   var tabs = document.querySelectorAll(".admin-tab");
   for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove("active");
@@ -104,7 +101,7 @@ function showTab(tabName, btn) {
   if (tabName === "add-campground") resetForm();
 }
 
-// 5. statistici
+// statistici
 function updateStats() {
   var tC = document.getElementById("totalCampgrounds");
   if (tC) tC.textContent = campgrounds.length;
@@ -133,7 +130,7 @@ function updateStats() {
   }
 }
 
-// 6. incarcare + render campgrounds
+// incarcare + render campgrounds
 async function loadCampgrounds() {
   try {
     var res = await fetch("/api/camps", { credentials: "include" });
@@ -240,7 +237,7 @@ function renderCampgrounds() {
   container.appendChild(table);
 }
 
-// 7. incarcare + render utilizatori
+// incarcare + render utilizatori
 async function loadUsers() {
   try {
     var res = await fetch("/api/users", { credentials: "include" });
@@ -297,13 +294,13 @@ function renderUsers() {
     var td3 = document.createElement("td");
     var sel = document.createElement("select");
     var optU = document.createElement("option");
-    optU.value = "user";
+    optU.value = "member";
     optU.textContent = "member";
     var optA = document.createElement("option");
     optA.value = "admin";
     optA.textContent = "admin";
     sel.append(optU, optA);
-    sel.value = u.role === "admin" ? "admin" : "user";
+    sel.value = u.role === "admin" ? "admin" : "member";
     sel.addEventListener("change", function () {
       updateUserRole(u.id, sel.value);
     });
@@ -330,7 +327,7 @@ function renderUsers() {
   container.appendChild(table);
 }
 
-// 8. setup form adauga/actualizeaza camping
+// setup form adauga/actualizeaza camping
 function setupForm() {
   var form = document.getElementById("campgroundForm");
   if (!form) return;
@@ -375,7 +372,7 @@ function setupForm() {
   });
 }
 
-// 9. edit / toggle / delete camping-uri
+// edit / toggle / delete camping-uri
 function editCampground(id) {
   for (var i = 0; i < campgrounds.length; i++) {
     if (campgrounds[i].id === id) {
@@ -433,7 +430,7 @@ async function deleteCampground(id) {
   }
 }
 
-// 10. schimbare rol utilizator
+// schimbare rol utilizator
 async function updateUserRole(id, newRole) {
   try {
     var res = await fetch("/api/users/" + id, {
@@ -449,7 +446,7 @@ async function updateUserRole(id, newRole) {
   }
 }
 
-// 11. stergere utilizator
+// stergere utilizator
 async function deleteUser(id) {
   if (!confirm("esti sigur?")) return;
   try {
@@ -464,7 +461,7 @@ async function deleteUser(id) {
   }
 }
 
-// 12. reset form & close modal
+// reset form & close modal
 function resetForm() {
   var f = document.getElementById("campgroundForm");
   if (!f) return;
