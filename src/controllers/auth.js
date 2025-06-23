@@ -49,6 +49,7 @@ function registerAuthRoutes(router) {
         provider: "google",
         oauth_id: userinfo.id,
         email: userinfo.email,
+        name: userinfo.name,
       });
 
       const jwtToken = sign({ id: user.id, role: user.role });
