@@ -14,7 +14,9 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <script src="js/admin.js" defer></script>
+    <script src="js/base.js" defer></script>
+    <script src="js/admin.js"></script>
+
     <style></style>
   </head>
   <body>
@@ -81,16 +83,7 @@
     <!-- Main Content -->
     <main>
       <div class="admin-content">
-        <h1
-          style="
-            text-align: center;
-            margin-bottom: 2rem;
-            color: var(--forest);
-            font-size: 2.5rem;
-          "
-        >
-          Panel Administrator
-        </h1>
+        <h1>Panel Administrator</h1>
 
         <!-- Statistics -->
         <div class="stats-cards">
@@ -273,7 +266,7 @@
                   </div>
                 </div>
 
-                <div style="display: flex; gap: 1rem; margin-top: 2rem">
+                <div class="form-actions">
                   <button type="submit" class="btn btn-primary" id="submitBtn">
                     Adaugă Camping
                   </button>
@@ -326,23 +319,28 @@
       <div class="container">
         <div class="footer-content">
           <div class="footer-info">
-            <div class="footer-logo">CampRo🏕️</div>
+            <div class="footer-logo">
+              GreenCamping
+              <span><img src="images/logo.png" width="50" height="50" /></span>
+            </div>
             <p class="footer-description">
-              Platforma ta pentru descoperirea și rezervarea celor mai bune
-              locuri de camping din România.
+              Platforma ta pentru descoperirea și rezervarea campingurilor din
+              România.
             </p>
           </div>
-        </div>
 
+          <div class="social-links">
+            <a href="" class="social-link">Fb</a>
+            <a href="https://www.instagram.com/andreitod1/" class="social-link">
+              Ig
+            </a>
+            <a href="#" class="social-link">Tw</a>
+          </div>
+        </div>
         <div class="footer-bottom">
-          <p>
-            &copy; <span id="current-year"></span> CampRo. Toate drepturile
-            rezervate.
-          </p>
+          <p>&copy; <span id="current-year"></span> GreenCamping</p>
         </div>
       </div>
     </footer>
-
-    <script src="admin-simple.js"></script>
   </body>
 </html>

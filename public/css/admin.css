@@ -4,6 +4,13 @@
   padding: 2rem;
 }
 
+.admin-content h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--forest);
+  font-size: 2.5rem;
+}
+
 .admin-tabs {
   display: flex;
   gap: 1rem;
@@ -185,6 +192,12 @@
   outline: none;
   border-color: var(--forest);
   box-shadow: 0 0 0 3px rgba(116, 198, 157, 0.1);
+}
+
+.form-options {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
 .facilities-grid {
