@@ -83,7 +83,37 @@ async function getReviews(req, res) {
   res.end(JSON.stringify(result.rows));
 }
 
+/*
+ *  GET /api/camps/reviews
+ *  status 200, 500
+ */
+async function getAllReviews(req, res) {
+  try {
+    const result = await db.query(
+      `SELECT
+         r.id,
+         r.camp_site_id,
+         r.user_id,
+         u.email AS author,
+         r.rating,
+         r.comment,
+         r.created_at
+       FROM reviews r
+       JOIN users u ON u.id = r.user_id
+       ORDER BY r.created_at DESC`
+    );
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(result.rows));
+  } catch (err) {
+    console.error("Error fetching all reviews:", err);
+    res.writeHead(500, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Internal server error" }));
+  }
+}
+
 module.exports = function registerReviewRoutes(router) {
+  router.add("GET", /^\/api\/reviews$/, getAllReviews);
   router.add("POST", /^\/api\/camps\/\d+\/reviews$/, addReview);
   router.add("GET", /^\/api\/camps\/\d+\/reviews(?:\?.*)?$/, getReviews);
 };

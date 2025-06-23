@@ -3,6 +3,7 @@ CREATE TYPE booking_status   AS ENUM ('pending','confirmed','cancelled','rejecte
 
 CREATE TABLE users (
     id             SERIAL PRIMARY KEY,
+    name           TEXT NOT NULL,
     email          TEXT UNIQUE NOT NULL,
     password_hash  TEXT,
     oauth_provider TEXT,
