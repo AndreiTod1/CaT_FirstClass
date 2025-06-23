@@ -110,7 +110,7 @@ function updateStats() {
   if (aC) {
     var cnt = 0;
     for (var i = 0; i < campgrounds.length; i++) {
-      if (campgrounds[i].active) cnt++;
+      if (campgrounds[i].status) cnt++;
     }
     aC.textContent = cnt;
   }
@@ -121,11 +121,17 @@ function updateStats() {
   var avgEl = document.getElementById("avgRating");
   if (avgEl) {
     var sum = 0;
-    for (var i = 0; i < campgrounds.length; i++) {
-      sum += campgrounds[i].rating;
-    }
-    var avg = "0.0";
-    if (campgrounds.length > 0) avg = (sum / campgrounds.length).toFixed(1);
+    var count = 0;
+
+    campgrounds.forEach((c) => {
+      const r = Number(c.avg_rating);
+      if (!isNaN(r) && r > 0) {
+        sum += r;
+        count++;
+      }
+    });
+
+    const avg = count > 0 ? (sum / count).toFixed(1) : "0.0";
     avgEl.textContent = avg;
   }
 }
@@ -162,9 +168,7 @@ function renderCampgrounds() {
 
   var thead = document.createElement("thead");
   var hr = document.createElement("tr");
-  ["Nume", "Locatie", "Pret", "Rating", "Status", "Actiuni"].forEach(function (
-    h
-  ) {
+  ["Nume", "Pret", "Rating", "Status", "Actiuni"].forEach(function (h) {
     var th = document.createElement("th");
     th.textContent = h;
     hr.appendChild(th);
@@ -185,16 +189,12 @@ function renderCampgrounds() {
     td1.append(st, br, sm);
     tr.appendChild(td1);
 
-    var td2 = document.createElement("td");
-    td2.textContent = c.location;
-    tr.appendChild(td2);
-
     var td3 = document.createElement("td");
     td3.textContent = c.price + " lei/noapte";
     tr.appendChild(td3);
 
     var td4 = document.createElement("td");
-    td4.textContent = c.rating + " ⭐";
+    td4.textContent = c.avg_rating + " ⭐";
     tr.appendChild(td4);
 
     var td5 = document.createElement("td");
@@ -345,17 +345,18 @@ function setupForm() {
 
     var payload = {
       name: form.campgroundName.value,
-      location: form.campgroundLocation.value,
       latitude: isNaN(latVal) ? null : latVal,
       longitude: isNaN(lngVal) ? null : lngVal,
       region: form.campgroundRegion.value,
       type: form.campgroundType.value,
       price: parseFloat(form.campgroundPrice.value),
       description: form.campgroundDescription.value,
-      image: form.campgroundImage.value,
+      image_url: form.campgroundImage.value,
       wifi: document.querySelector('input[value="wifi"]').checked,
       shower: document.querySelector('input[value="showers"]').checked,
-      bbq: document.querySelector('input[value="bbq"]').checked,
+      barbecue: document.querySelector(
+        'input[name="facilities"][value="barbecue"]'
+      ).checked,
       parking: document.querySelector('input[value="parking"]').checked,
       capacity: 0, // not used
     };
@@ -398,14 +399,13 @@ function editCampground(id) {
   // 2) fill the rest
   document.getElementById("campgroundId").value = c.id;
   document.getElementById("campgroundName").value = c.name;
-  document.getElementById("campgroundLocation").value = c.location;
   document.getElementById("campgroundLatitude").value = c.latitude ?? "";
   document.getElementById("campgroundLongitude").value = c.longitude ?? "";
   document.getElementById("campgroundRegion").value = c.region;
   document.getElementById("campgroundType").value = c.type;
   document.getElementById("campgroundPrice").value = c.price;
   document.getElementById("campgroundDescription").value = c.description || "";
-  document.getElementById("campgroundImage").value = c.image || "";
+  document.getElementById("campgroundImage").value = c.image_url || "";
 
   document.querySelectorAll(".facility-item input").forEach((cb) => {
     switch (cb.value) {
@@ -415,7 +415,7 @@ function editCampground(id) {
       case "showers":
         cb.checked = !!c.shower;
         break;
-      case "bbq":
+      case "barbecue":
         cb.checked = !!c.barbecue;
         break;
       case "parking":

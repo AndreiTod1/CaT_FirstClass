@@ -69,7 +69,7 @@ async function getAllCamps(req, res) {
 
 /*
  * POST /api/camps
- * JSON Body { name, description, latitude, longitude, capacity,region, price, type, wifi, shower, parking, barbecue, status }
+ * JSON Body { name, description, latitude, longitude, capacity,region, price, type, wifi, shower, parking, barbecue, status, image_url }
  * Status 201, 400
  */
 async function createCamp(req, res) {
@@ -87,16 +87,16 @@ async function createCamp(req, res) {
       shower,
       parking,
       barbecue,
-
       status,
+      image_url,
     } = await parseJson(req);
 
     const result = await db.query(
       `INSERT INTO camp_sites
         (name, description, latitude, longitude, capacity,
          region, price, type,
-         wifi, shower, parking, barbecue, status)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
+         wifi, shower, parking, barbecue, status, image_url)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
        RETURNING *`,
       [
         name,
@@ -112,6 +112,7 @@ async function createCamp(req, res) {
         parking,
         barbecue,
         status ?? true,
+        image_url ?? "",
       ]
     );
 
@@ -126,7 +127,7 @@ async function createCamp(req, res) {
 
 /*
  * PUT /api/camps/:id
- * JSON Body { name, description, latitude, longitude, capacity, region, price, type, wifi, shower, parking, barbecue, status }
+ * JSON Body { name, description, latitude, longitude, capacity, region, price, type, wifi, shower, parking, barbecue, status, image_url }
  * Status 200, 400, 404, 500
  */
 async function updateCamp(req, res) {
@@ -157,6 +158,7 @@ async function updateCamp(req, res) {
     region,
     price,
     type,
+    image_url,
   } = body;
 
   const wifi = !!body.wifi;
@@ -181,8 +183,9 @@ async function updateCamp(req, res) {
               shower      = $10,
               parking     = $11,
               barbecue    = $12,
-              status      = $13
-        WHERE id = $14
+              status      = $13,
+              image_url   = $14
+        WHERE id = $15
       RETURNING *`,
       [
         name,
@@ -198,6 +201,7 @@ async function updateCamp(req, res) {
         parking,
         barbecue,
         status,
+        image_url,
         id,
       ]
     );
