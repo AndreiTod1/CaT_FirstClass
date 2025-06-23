@@ -48,9 +48,26 @@ CREATE TABLE reviews (
     rating        INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
     comment       TEXT,
     media_urls    TEXT[],              
+    likes         INT DEFAULT 0,
     created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
     UNIQUE (user_id, camp_site_id)    
 );
+
+CREATE TABLE review_likes (
+  review_id  INT REFERENCES reviews(id) ON DELETE CASCADE,
+  user_id    INT REFERENCES users(id)   ON DELETE CASCADE,
+  PRIMARY KEY (review_id, user_id)
+);
+
+CREATE OR REPLACE FUNCTION incr_likes() RETURNS trigger AS $$
+BEGIN
+  UPDATE reviews SET likes = likes + 1 WHERE id = NEW.review_id;
+  RETURN NEW;
+END $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_like_insert
+AFTER INSERT ON review_likes
+FOR EACH ROW EXECUTE FUNCTION incr_likes();
 
 CREATE INDEX idx_camp_sites_geo  ON camp_sites (latitude, longitude);
 CREATE INDEX idx_bookings_dates  ON bookings   (camp_site_id, start_date, end_date);

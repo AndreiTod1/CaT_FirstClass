@@ -1,6 +1,7 @@
 const { URL } = require("url");
 const db = require("../services/db");
 const parseJSON = require("../utils/parseJSON");
+const requireAuth = require("../middleware/requireAuth");
 
 /*
  * POST /api/camps/{campId}/reviews
@@ -97,6 +98,8 @@ async function getAllReviews(req, res) {
          u.email AS author,
          r.rating,
          r.comment,
+         r.media_urls,
+         r.likes,
          r.created_at
        FROM reviews r
        JOIN users u ON u.id = r.user_id
@@ -112,8 +115,49 @@ async function getAllReviews(req, res) {
   }
 }
 
+/*
+ * POST /api/reviews/:id/likes
+ * status 200,409, 404, 401
+ */
+async function likeReview(req, res) {
+  const pathname = new URL(req.url, `http://${req.headers.host}`).pathname;
+  const match = /^\/api\/reviews\/(\d+)\/likes$/.exec(pathname);
+  if (!match) {
+    res.writeHead(404).end();
+    return;
+  }
+  const reviewId = Number(match[1]);
+  const userId = req.user?.id;
+  if (!userId) return res.writeHead(401).end();
+
+  try {
+    await db.query(
+      `INSERT INTO review_likes (review_id,user_id) VALUES ($1,$2)`,
+      [reviewId, userId]
+    );
+  } catch (err) {
+    // 23505 = PK duplicate
+    if (err.code === "23505") return res.writeHead(409).end();
+    throw err;
+  }
+
+  // nr actual de like-uri
+  const {
+    rows: [{ likes }],
+  } = await db.query(`SELECT likes FROM reviews WHERE id = $1`, [reviewId]);
+
+  res
+    .writeHead(200, { "Content-Type": "application/json" })
+    .end(JSON.stringify({ likes }));
+}
+
 module.exports = function registerReviewRoutes(router) {
   router.add("GET", /^\/api\/reviews$/, getAllReviews);
   router.add("POST", /^\/api\/camps\/\d+\/reviews$/, addReview);
   router.add("GET", /^\/api\/camps\/\d+\/reviews(?:\?.*)?$/, getReviews);
+  router.add("POST", /^\/api\/reviews\/\d+\/likes$/, async (req, res) => {
+    await requireAuth(req, res, async () => {
+      await likeReview(req, res);
+    });
+  });
 };

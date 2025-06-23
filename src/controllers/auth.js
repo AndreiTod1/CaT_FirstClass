@@ -120,4 +120,9 @@ function registerMeRoute(router) {
   });
 }
 
-module.exports = { registerAuthRoutes, registerLogoutRoute, registerMeRoute };
+module.exports = {
+  registerAuthRoutes,
+  registerLogoutRoute,
+  registerMeRoute,
+  parseCookies,
+};
