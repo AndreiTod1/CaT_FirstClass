@@ -334,23 +334,35 @@ function setupForm() {
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
     var idField = document.getElementById("campgroundId").value;
+
+    // grab by ID:
+    var latVal = parseFloat(
+      document.getElementById("campgroundLatitude").value
+    );
+    var lngVal = parseFloat(
+      document.getElementById("campgroundLongitude").value
+    );
+
     var payload = {
       name: form.campgroundName.value,
       location: form.campgroundLocation.value,
+      latitude: isNaN(latVal) ? null : latVal,
+      longitude: isNaN(lngVal) ? null : lngVal,
       region: form.campgroundRegion.value,
       type: form.campgroundType.value,
       price: parseFloat(form.campgroundPrice.value),
-      rating: 0,
       description: form.campgroundDescription.value,
       image: form.campgroundImage.value,
-      facilities: [],
+      wifi: document.querySelector('input[value="wifi"]').checked,
+      shower: document.querySelector('input[value="showers"]').checked,
+      bbq: document.querySelector('input[value="bbq"]').checked,
+      parking: document.querySelector('input[value="parking"]').checked,
+      capacity: 0, // not used
     };
-    var boxes = form.querySelectorAll(".facility-checkbox input:checked");
-    for (var i = 0; i < boxes.length; i++) {
-      payload.facilities.push(boxes[i].value);
-    }
+
     var method = idField ? "PUT" : "POST";
     var url = idField ? "/api/camps/" + idField : "/api/camps";
+
     try {
       var res = await fetch(url, {
         method: method,
@@ -374,26 +386,44 @@ function setupForm() {
 
 // edit / toggle / delete camping-uri
 function editCampground(id) {
-  // găsești camping-ul
   var c = campgrounds.find((x) => x.id === id);
-  if (!c) return;
+  if (!c) return alert("Camping-ul nu a fost găsit.");
 
-  var btn = document.querySelector(".admin-tab[onclick*=\"'add-campground'\"]");
-  if (btn) showTab("add-campground", btn);
+  // 1) open the add tab
+  var addBtn = Array.from(document.querySelectorAll(".admin-tab")).find((t) =>
+    t.textContent.toLowerCase().includes("adaugă")
+  );
+  if (addBtn) showTab("add-campground", addBtn);
 
+  // 2) fill the rest
   document.getElementById("campgroundId").value = c.id;
   document.getElementById("campgroundName").value = c.name;
   document.getElementById("campgroundLocation").value = c.location;
+  document.getElementById("campgroundLatitude").value = c.latitude ?? "";
+  document.getElementById("campgroundLongitude").value = c.longitude ?? "";
   document.getElementById("campgroundRegion").value = c.region;
   document.getElementById("campgroundType").value = c.type;
   document.getElementById("campgroundPrice").value = c.price;
-  document.getElementById("campgroundRating").value = c.rating;
-  document.getElementById("campgroundDescription").value = c.description;
+  document.getElementById("campgroundDescription").value = c.description || "";
   document.getElementById("campgroundImage").value = c.image || "";
 
-  document.querySelectorAll(".facility-checkbox input").forEach((cb) => {
-    cb.checked = c.facilities.includes(cb.value);
+  document.querySelectorAll(".facility-item input").forEach((cb) => {
+    switch (cb.value) {
+      case "wifi":
+        cb.checked = !!c.wifi;
+        break;
+      case "showers":
+        cb.checked = !!c.shower;
+        break;
+      case "bbq":
+        cb.checked = !!c.barbecue;
+        break;
+      case "parking":
+        cb.checked = !!c.parking;
+        break;
+    }
   });
+
   document.getElementById("submitBtn").textContent = "actualizează camping";
 }
 
@@ -465,10 +495,12 @@ function resetForm() {
   var f = document.getElementById("campgroundForm");
   if (!f) return;
   f.reset();
-  var i = document.getElementById("campgroundId");
-  if (i) i.value = "";
-  var s = document.getElementById("submitBtn");
-  if (s) s.textContent = "adauga camping";
+
+  document.getElementById("campgroundLatitude").value = "";
+  document.getElementById("campgroundLongitude").value = "";
+
+  document.getElementById("campgroundId").value = "";
+  document.getElementById("submitBtn").textContent = "adauga camping";
 }
 
 function closeModal() {

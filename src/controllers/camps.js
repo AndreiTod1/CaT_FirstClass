@@ -147,6 +147,7 @@ async function updateCamp(req, res) {
     return res.end(JSON.stringify({ error: "Invalid JSON" }));
   }
 
+  // destructure
   const {
     name,
     description,
@@ -156,12 +157,14 @@ async function updateCamp(req, res) {
     region,
     price,
     type,
-    wifi,
-    shower,
-    parking,
-    barbecue,
-    status,
   } = body;
+
+  const wifi = !!body.wifi;
+  const shower = !!body.shower;
+  const parking = !!body.parking;
+  const barbecue = !!body.barbecue;
+
+  const status = body.status === undefined ? true : !!body.status;
 
   try {
     const result = await db.query(
@@ -194,7 +197,7 @@ async function updateCamp(req, res) {
         shower,
         parking,
         barbecue,
-        status ?? true,
+        status,
         id,
       ]
     );
@@ -205,11 +208,11 @@ async function updateCamp(req, res) {
     }
 
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(result.rows[0]));
+    return res.end(JSON.stringify(result.rows[0]));
   } catch (err) {
     console.error(err);
     res.writeHead(500, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: "Internal server error" }));
+    return res.end(JSON.stringify({ error: "Internal server error" }));
   }
 }
 
