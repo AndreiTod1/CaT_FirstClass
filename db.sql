@@ -26,7 +26,8 @@ CREATE TABLE camp_sites (
     shower      BOOLEAN NOT NULL DEFAULT false,
     parking     BOOLEAN NOT NULL DEFAULT false,
     barbecue    BOOLEAN NOT NULL DEFAULT false,
-    status      BOOLEAN NOT NULL DEFAULT true,  
+    status      BOOLEAN NOT NULL DEFAULT true,
+    image_url   TEXT,  
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
