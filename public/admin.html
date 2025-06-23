@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel Administrator - CampRo</title>
+    <meta
+      name="description"
+      content="Panoul de administrare pentru gestionarea camping-urilor și utilizatorilor"
+    />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/admin.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="js/base.js" defer></script>
+    <script src="js/admin.js"></script>
+
+    <style></style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="container header-content">
+        <a href="index.html" class="logo">
+          GreenCamping
+          <span class="logo-emoji">
+            <img src="images/logo.png" width="50" height="50" />
+          </span>
+        </a>
+        <nav class="desktop-nav">
+          <ul>
+            <li><a href="index.html" class="active">Acasă</a></li>
+            <li><a href="campgrounds.html">Camping-uri</a></li>
+            <li><a href="map.html">Hartă</a></li>
+            <li><a href="reviews.html">Recenzii</a></li>
+            <li><a href="about.html">Despre</a></li>
+            <li>
+              <a href="admin.html" id="adminMenuDesktop" style="display: none"
+                >🔧 Admin Panel</a
+              >
+            </li>
+          </ul>
+        </nav>
+        <div class="small-screen-box">
+          <div class="user-box" id="userBox" style="display: none">
+            <span class="user-name" id="userName"></span>
+            <button id="logoutBtn" class="btn-logout">Logout</button>
+          </div>
+          <a href="login.html" class="btn btn-primary" id="loginBtn"
+            >Conectare</a
+          >
+          <div><button class="mobile-menu-btn">☰</button></div>
+        </div>
+      </div>
+
+      <!-- mobile Menu -->
+      <div class="mobile-menu" id="mobile-menu">
+        <div class="container">
+          <div class="mobile-menu-header">
+            <a href="index.html" class="logo">GreenCamping</a>
+            <button class="close-menu">✕</button>
+          </div>
+          <nav class="mobile-nav">
+            <ul>
+              <li><a href="index.html" class="active">Acasă</a></li>
+              <li><a href="campgrounds.html">Camping-uri</a></li>
+              <li><a href="map.html">Hartă</a></li>
+              <li><a href="reviews.html">Recenzii</a></li>
+              <li><a href="about.html">Despre</a></li>
+              <li>
+                <a href="admin.html" id="adminMenuMobile" style="display: none"
+                  >🔧 Admin Panel</a
+                >
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <div class="admin-content">
+        <h1>Panel Administrator</h1>
+
+        <!-- Statistics -->
+        <div class="stats-cards">
+          <div class="stat-card">
+            <div class="stat-number" id="totalCampgrounds">0</div>
+            <div class="stat-label">Total Camping-uri</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="activeCampgrounds">0</div>
+            <div class="stat-label">Camping-uri Active</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="totalUsers">0</div>
+            <div class="stat-label">Total Utilizatori</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="avgRating">0.0</div>
+            <div class="stat-label">Rating Mediu</div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="admin-tabs">
+          <button
+            class="admin-tab active"
+            onclick="showTab('campgrounds', this)"
+          >
+            Camping-uri
+          </button>
+          <button class="admin-tab" onclick="showTab('add-campground', this)">
+            Adaugă Camping
+          </button>
+          <button class="admin-tab" onclick="showTab('users', this)">
+            Utilizatori
+          </button>
+        </div>
+
+        <!-- Campgrounds Section -->
+        <div class="admin-section active" id="campgrounds-section">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h2 class="admin-card-title">Toate Camping-urile</h2>
+            </div>
+            <div class="admin-card-content">
+              <div id="campgroundsList">
+                <div class="empty-state">
+                  <p>Se încarcă camping-urile...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Campground Section -->
+        <div class="admin-section" id="add-campground-section">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h2 class="admin-card-title">Adaugă Camping Nou</h2>
+            </div>
+            <div class="admin-card-content">
+              <form id="campgroundForm">
+                <input type="hidden" id="campgroundId" />
+
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="campgroundName">Nume Camping</label>
+                    <input type="text" id="campgroundName" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="campgroundLocation">Locație</label>
+                    <input type="text" id="campgroundLocation" required />
+                  </div>
+                </div>
+
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="campgroundRegion">Regiune</label>
+                    <select id="campgroundRegion" required>
+                      <option value="">Selectează regiunea</option>
+                      <option value="transilvania">Transilvania</option>
+                      <option value="muntenia">Muntenia</option>
+                      <option value="moldova">Moldova</option>
+                      <option value="dobrogea">Dobrogea</option>
+                      <option value="banat">Banat</option>
+                      <option value="crisana">Crișana</option>
+                      <option value="maramures">Maramureș</option>
+                      <option value="oltenia">Oltenia</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="campgroundType">Tip</label>
+                    <select id="campgroundType" required>
+                      <option value="">Selectează tipul</option>
+                      <option value="tent">Corturi</option>
+                      <option value="cabin">Cabane</option>
+                      <option value="rv">Rulote</option>
+                      <option value="glamping">Glamping</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="campgroundPrice">Preț/noapte (lei)</label>
+                    <input
+                      type="number"
+                      id="campgroundPrice"
+                      required
+                      min="0"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="campgroundRating">Rating (1-5)</label>
+                  <input
+                    type="number"
+                    id="campgroundRating"
+                    required
+                    min="1"
+                    max="5"
+                    step="0.1"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="campgroundDescription">Descriere</label>
+                  <textarea
+                    id="campgroundDescription"
+                    required
+                    rows="4"
+                  ></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="campgroundImage">URL Imagine</label>
+                  <input type="url" id="campgroundImage" required />
+                </div>
+
+                <div class="form-group">
+                  <label>Facilități</label>
+                  <div class="facilities-grid">
+                    <div class="facility-checkbox">
+                      <input type="checkbox" id="wifi" value="wifi" />
+                      <label for="wifi">Wi-Fi</label>
+                    </div>
+                    <div class="facility-checkbox">
+                      <input type="checkbox" id="showers" value="showers" />
+                      <label for="showers">Dușuri</label>
+                    </div>
+                    <div class="facility-checkbox">
+                      <input type="checkbox" id="bbq" value="bbq" />
+                      <label for="bbq">Grătar</label>
+                    </div>
+                    <div class="facility-checkbox">
+                      <input type="checkbox" id="parking" value="parking" />
+                      <label for="parking">Parcare</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary" id="submitBtn">
+                    Adaugă Camping
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline"
+                    onclick="resetForm()"
+                  >
+                    Resetează
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Users Section -->
+        <div class="admin-section" id="users-section">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h2 class="admin-card-title">Gestionare Utilizatori</h2>
+            </div>
+            <div class="admin-card-content">
+              <div id="usersList">
+                <div class="empty-state">
+                  <p>Se încarcă utilizatorii...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Editează Camping</h3>
+          <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+        <div id="editModalContent">
+          <!-- Edit form will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-info">
+            <div class="footer-logo">
+              GreenCamping
+              <span><img src="images/logo.png" width="50" height="50" /></span>
+            </div>
+            <p class="footer-description">
+              Platforma ta pentru descoperirea și rezervarea campingurilor din
+              România.
+            </p>
+          </div>
+
+          <div class="social-links">
+            <a href="" class="social-link">Fb</a>
+            <a href="https://www.instagram.com/andreitod1/" class="social-link">
+              Ig
+            </a>
+            <a href="#" class="social-link">Tw</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; <span id="current-year"></span> GreenCamping</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

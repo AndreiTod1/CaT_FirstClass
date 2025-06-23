@@ -6,6 +6,7 @@ const Router = require("./router");
 const serveStatic = require("./staticServer");
 const registerCamps = require("./controllers/camps");
 const registerReviews = require("./controllers/reviews");
+const registerUsersRoutes = require("./controllers/users");
 
 const {
   registerAuthRoutes,
@@ -30,6 +31,7 @@ async function start() {
   // Mount controllers
   registerCamps(router);
   registerReviews(router);
+  registerUsersRoutes(router);
 
   // Serve static files from /public
   const PUBLIC_DIR = path.join(__dirname, "../public");
