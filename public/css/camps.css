@@ -173,6 +173,11 @@
   font-weight: normal;
 }
 
+.campings {
+  padding: 2rem 0 4rem;
+  background-color: white;
+}
+
 @media (min-width: 640px) {
   .camping-grid {
     grid-template-columns: repeat(2, 1fr);

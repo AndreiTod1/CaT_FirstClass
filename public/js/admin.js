@@ -200,8 +200,8 @@ function renderCampgrounds() {
     var td5 = document.createElement("td");
     var sp = document.createElement("span");
     sp.className =
-      "status-badge " + (c.active ? "status-active" : "status-inactive");
-    sp.textContent = c.active ? "activ" : "inactiv";
+      "status-badge " + (c.status ? "status-active" : "status-inactive");
+    sp.textContent = c.status ? "activ" : "inactiv";
     td5.appendChild(sp);
     tr.appendChild(td5);
 
@@ -216,7 +216,7 @@ function renderCampgrounds() {
 
     var bt = document.createElement("button");
     bt.className = "action-btn btn-toggle";
-    bt.textContent = c.active ? "dezactiveaza" : "activeaza";
+    bt.textContent = c.status ? "dezactiveaza" : "activeaza";
     bt.addEventListener("click", function () {
       toggleCampground(c.id);
     });
@@ -340,7 +340,7 @@ function setupForm() {
       region: form.campgroundRegion.value,
       type: form.campgroundType.value,
       price: parseFloat(form.campgroundPrice.value),
-      rating: parseFloat(form.campgroundRating.value),
+      rating: 0,
       description: form.campgroundDescription.value,
       image: form.campgroundImage.value,
       facilities: [],
@@ -374,28 +374,27 @@ function setupForm() {
 
 // edit / toggle / delete camping-uri
 function editCampground(id) {
-  for (var i = 0; i < campgrounds.length; i++) {
-    if (campgrounds[i].id === id) {
-      var c = campgrounds[i];
-      document.getElementById("campgroundId").value = c.id;
-      document.getElementById("campgroundName").value = c.name;
-      document.getElementById("campgroundLocation").value = c.location;
-      document.getElementById("campgroundRegion").value = c.region;
-      document.getElementById("campgroundType").value = c.type;
-      document.getElementById("campgroundPrice").value = c.price;
-      document.getElementById("campgroundRating").value = c.rating;
-      document.getElementById("campgroundDescription").value = c.description;
-      document.getElementById("campgroundImage").value = c.image;
-      var bs = document.querySelectorAll(".facility-checkbox input");
-      for (var j = 0; j < bs.length; j++) {
-        bs[j].checked = c.facilities.indexOf(bs[j].value) !== -1;
-      }
-      break;
-    }
-  }
-  document.getElementById("submitBtn").textContent = "actualizeaza camping";
+  // găsești camping-ul
+  var c = campgrounds.find((x) => x.id === id);
+  if (!c) return;
+
   var btn = document.querySelector(".admin-tab[onclick*=\"'add-campground'\"]");
   if (btn) showTab("add-campground", btn);
+
+  document.getElementById("campgroundId").value = c.id;
+  document.getElementById("campgroundName").value = c.name;
+  document.getElementById("campgroundLocation").value = c.location;
+  document.getElementById("campgroundRegion").value = c.region;
+  document.getElementById("campgroundType").value = c.type;
+  document.getElementById("campgroundPrice").value = c.price;
+  document.getElementById("campgroundRating").value = c.rating;
+  document.getElementById("campgroundDescription").value = c.description;
+  document.getElementById("campgroundImage").value = c.image || "";
+
+  document.querySelectorAll(".facility-checkbox input").forEach((cb) => {
+    cb.checked = c.facilities.includes(cb.value);
+  });
+  document.getElementById("submitBtn").textContent = "actualizează camping";
 }
 
 async function toggleCampground(id) {
@@ -404,11 +403,11 @@ async function toggleCampground(id) {
   });
   if (!c) return;
   try {
-    await fetch("/api/camps/" + id, {
+    await fetch(`/api/camps/${id}`, {
       method: "PATCH",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ active: !c.active }),
+      body: JSON.stringify({ active: !c.status }),
     });
     await loadCampgrounds();
   } catch (err) {

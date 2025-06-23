@@ -124,7 +124,185 @@ async function createCamp(req, res) {
   }
 }
 
+/*
+ * PUT /api/camps/:id
+ * JSON Body { name, description, latitude, longitude, capacity, region, price, type, wifi, shower, parking, barbecue, status }
+ * Status 200, 400, 404, 500
+ */
+async function updateCamp(req, res) {
+  // extrage id-ul
+  const match = req.url.match(/^\/api\/camps\/(\d+)$/);
+  const id = match && match[1];
+  if (!id) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "Missing camp ID" }));
+  }
+
+  // parsează body-ul
+  let body;
+  try {
+    body = await parseJson(req);
+  } catch {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "Invalid JSON" }));
+  }
+
+  const {
+    name,
+    description,
+    latitude,
+    longitude,
+    capacity,
+    region,
+    price,
+    type,
+    wifi,
+    shower,
+    parking,
+    barbecue,
+    status,
+  } = body;
+
+  try {
+    const result = await db.query(
+      `UPDATE camp_sites
+          SET name        = $1,
+              description = $2,
+              latitude    = $3,
+              longitude   = $4,
+              capacity    = $5,
+              region      = $6,
+              price       = $7,
+              type        = $8,
+              wifi        = $9,
+              shower      = $10,
+              parking     = $11,
+              barbecue    = $12,
+              status      = $13
+        WHERE id = $14
+      RETURNING *`,
+      [
+        name,
+        description,
+        latitude,
+        longitude,
+        capacity,
+        region,
+        price,
+        type,
+        wifi,
+        shower,
+        parking,
+        barbecue,
+        status ?? true,
+        id,
+      ]
+    );
+
+    if (result.rowCount === 0) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "Camp not found" }));
+    }
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(result.rows[0]));
+  } catch (err) {
+    console.error(err);
+    res.writeHead(500, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Internal server error" }));
+  }
+}
+
+/*
+ * DELETE /api/camps/:id
+ * Status 204, 400, 404, 500
+ */
+
+async function deleteCamp(req, res) {
+  const match = req.url.match(/^\/api\/camps\/(\d+)$/);
+  const id = match && match[1];
+  if (!id) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "Missing camp ID" }));
+  }
+
+  try {
+    const result = await db.query(
+      `DELETE FROM camp_sites WHERE id = $1 RETURNING id`,
+      [id]
+    );
+
+    if (result.rowCount === 0) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "Camp not found" }));
+    }
+
+    res.writeHead(204);
+    return res.end();
+  } catch (err) {
+    console.error(err);
+    res.writeHead(500, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "Internal server error" }));
+  }
+}
+
+/*
+ * PUT /api/camps/:id/status
+ * JSON Body { active: boolean }
+ * status 200, 400, 404, 500
+ */
+async function toggleCampStatus(req, res) {
+  // 1) extrage ID-ul din URL
+  const match = req.url.match(/^\/api\/camps\/(\d+)$/);
+  const id = match && match[1];
+  if (!id) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "Missing camp ID" }));
+  }
+
+  // 2) parsează body-ul JSON
+  let body;
+  try {
+    body = await parseJson(req);
+  } catch {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "Invalid JSON" }));
+  }
+
+  const { active } = body;
+  if (typeof active !== "boolean") {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "Field 'active' must be boolean" }));
+  }
+
+  // 3) update status
+  try {
+    const result = await db.query(
+      `UPDATE camp_sites
+          SET status = $1
+        WHERE id = $2
+      RETURNING *`,
+      [active, id]
+    );
+
+    if (result.rowCount === 0) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "Camp not found" }));
+    }
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify(result.rows[0]));
+  } catch (err) {
+    console.error(err);
+    res.writeHead(500, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "Internal server error" }));
+  }
+}
+
 module.exports = function registerCampsRoutes(router) {
   router.add("GET", /^\/api\/camps(?:\?.*)?$/, getAllCamps);
   router.add("POST", /^\/api\/camps$/, createCamp);
+  router.add("PUT", /^\/api\/camps\/\d+$/, updateCamp);
+  router.add("DELETE", /^\/api\/camps\/\d+$/, deleteCamp);
+  router.add("PATCH", /^\/api\/camps\/\d+$/, toggleCampStatus);
 };
