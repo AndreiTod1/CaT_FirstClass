@@ -9,13 +9,16 @@
   },
   "dependencies": {
     "busboy": "^1.6.0",
+    "chartjs-node-canvas": "^5.0.0",
+    "dayjs": "^1.11.13",
     "dotenv": "^16.5.0",
     "googleapis": "^149.0.0",
     "jsonwebtoken": "^9.0.2",
     "mime-types": "^3.0.1",
     "openid-client": "^6.5.0",
     "pdfkit": "^0.17.1",
-    "pg": "^8.16.0"
+    "pg": "^8.16.0",
+    "svg-to-pdfkit": "^0.1.8"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
