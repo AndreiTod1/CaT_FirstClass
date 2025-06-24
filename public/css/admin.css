@@ -142,21 +142,8 @@
 }
 
 .btn-delete {
-  background: var(--red-600);
+  background: var(--red);
   color: white;
-}
-
-.btn-delete:hover {
-  background: var(--red-700);
-}
-
-.btn-toggle {
-  background: var(--gray-500);
-  color: white;
-}
-
-.btn-toggle:hover {
-  background: var(--gray-600);
 }
 
 .form-grid {
@@ -292,6 +279,25 @@
 
 .modal-close:hover {
   color: var(--gray-700);
+}
+
+/* image */
+.image-upload {
+  margin-bottom: 1rem;
+}
+
+.image-upload label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--gray-700);
+}
+
+.image-upload input[type="file"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--border-radius);
 }
 
 @media (max-width: 768px) {

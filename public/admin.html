@@ -119,6 +119,9 @@
           <button class="admin-tab" onclick="showTab('users', this)">
             Utilizatori
           </button>
+          <button class="admin-tab" onclick="showTab('bookings', this)">
+            Rezervări
+          </button>
         </div>
 
         <!-- Campgrounds Section -->
@@ -220,9 +223,14 @@
                   <textarea id="campgroundDescription" rows="4"></textarea>
                 </div>
 
-                <div class="form-group">
-                  <label for="campgroundImage">URL Imagine</label>
-                  <input type="text" id="campgroundImage" />
+                <div class="image-upload">
+                  <label>Adaugă imagini (opțional):</label>
+                  <input
+                    type="file"
+                    id="reviewImages"
+                    accept="image/*"
+                    multiple
+                  />
                 </div>
 
                 <div class="form-group">
@@ -286,6 +294,22 @@
               <div id="usersList">
                 <div class="empty-state">
                   <p>Se încarcă utilizatorii...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bookings Section -->
+        <div class="admin-section" id="bookings-section">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h2 class="admin-card-title">Gestionare Rezervări</h2>
+            </div>
+            <div class="admin-card-content">
+              <div id="bookingsList">
+                <div class="empty-state">
+                  <p>Se încarcă rezervările...</p>
                 </div>
               </div>
             </div>

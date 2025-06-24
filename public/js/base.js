@@ -78,6 +78,11 @@ function showUser(user) {
     if (adminDesk) adminDesk.style.display = "inline-block";
     if (adminMobile) adminMobile.style.display = "block";
   }
+
+  const start = document.getElementById("start");
+  if (start) {
+    start.style.display = "none";
+  }
 }
 
 function doLogout() {
