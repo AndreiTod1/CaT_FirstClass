@@ -41,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const img = el("img", "review-photo");
       img.src = url;
       img.loading = "lazy";
+      img.alt = "review photo";
       box.appendChild(img);
     }
   }
@@ -58,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     avatar.src = `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(
       review.author
     )}`;
+    avatar.alt = "Avatar user";
     author.appendChild(avatar);
 
     const aInfo = el("div", "author-info");
