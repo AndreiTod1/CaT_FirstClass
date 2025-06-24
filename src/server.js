@@ -8,6 +8,7 @@ const registerCamps = require("./controllers/camps");
 const registerReviews = require("./controllers/reviews");
 const registerUsersRoutes = require("./controllers/users");
 const registerBookings = require("./controllers/bookings");
+const registerStatsRoutes = require("./controllers/stats");
 
 const {
   registerAuthRoutes,
@@ -34,6 +35,7 @@ async function start() {
   registerCamps(router);
   registerReviews(router);
   registerUsersRoutes(router);
+  registerStatsRoutes(router);
 
   // Serve static files from /public
   const PUBLIC_DIR = path.join(__dirname, "../public");

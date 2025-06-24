@@ -14,7 +14,7 @@ module.exports = async function requireAuth(req, res, next) {
   }
   try {
     const payload = verify(token);
-    console.log("[Auth] Token valid, payload:", payload);
+    //console.log("[Auth] Token valid, payload:", payload);
     req.user = payload;
     next();
   } catch (err) {
