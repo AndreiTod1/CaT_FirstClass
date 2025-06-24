@@ -2,6 +2,9 @@ const { URL } = require("url");
 const db = require("../services/db");
 const parseJSON = require("../utils/parseJSON");
 const requireAuth = require("../middleware/requireAuth");
+const handleUpload = require("../utils/upload");
+const path = require("path");
+const fs = require("fs");
 
 /*
  * POST /api/camps/{campId}/reviews
@@ -9,6 +12,7 @@ const requireAuth = require("../middleware/requireAuth");
  * status 201,409, 500
  */
 async function addReview(req, res) {
+  let uploadedFiles = []; //pt clean-up
   try {
     // extract id
     const pathname = new URL(req.url, `http://${req.headers.host}`).pathname;
@@ -19,19 +23,53 @@ async function addReview(req, res) {
     }
     const campId = Number(match[1]);
 
-    const {
-      userId,
+    let userId,
       rating,
       comment = null,
-      mediaUrls = [],
-    } = await parseJSON(req);
+      mediaUrls = [];
 
-    //some validatation
+    if ((req.headers["content-type"] || "").startsWith("multipart/form-data")) {
+      // --- multipart: folosim Busboy
+      const { fields, files } = await handleUpload(
+        req,
+        path.join(process.cwd(), "public", "uploads") // de la radacina proiectului
+      );
+
+      uploadedFiles = files;
+
+      if (!fields.payload) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ error: "Lipseşte câmpul payload" }));
+      }
+
+      ({ userId, rating, comment = null } = JSON.parse(fields.payload));
+      mediaUrls = files.map((f) => f.url); // link-uri publice
+    } else {
+      // --- application/json clasic
+      ({
+        userId,
+        rating,
+        comment = null,
+        mediaUrls = [],
+      } = await parseJSON(req));
+    }
+
+    // validatation
     if (!userId || !rating || rating < 1 || rating > 5) {
       res.writeHead(400, { "Content-Type": "application/json" });
       return res.end(
         JSON.stringify({ error: "userId & rating(1-5) obligatorii" })
       );
+    }
+
+    const { rowCount: campExists } = await db.query(
+      `SELECT 1 FROM camp_sites WHERE id = $1`,
+      [campId]
+    );
+
+    if (!campExists) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "Camping inexistent" }));
     }
 
     const result = await db.query(
@@ -47,6 +85,7 @@ async function addReview(req, res) {
   } catch (err) {
     // !! error 23505 pg
     if (err.code === "23505") {
+      uploadedFiles.forEach((f) => fs.unlink(f.path, () => {})); // nu mao facem upload
       res.writeHead(409, { "Content-Type": "application/json" });
       return res.end(
         JSON.stringify({ error: "Ai recenzat deja acest camping" })
