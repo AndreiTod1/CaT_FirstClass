@@ -2,25 +2,24 @@
 const fs = require("fs");
 const path = require("path");
 const { getStats } = require("../services/statsService");
-const { makeSvg } = require("../utils/svgBuilder");
+const { svgTopCamps, svgTopRegions } = require("../utils/svgBuilder");
 const { createPdf } = require("../utils/pdfGenerator");
 
-/* ------------------------------------------------------------
- * GET /api/reports/daily
- * status 200  500
- * ---------------------------------------------------------- */
 async function sendDailyReport(req, res) {
   try {
     // statistici din DB
     const stats = await getStats();
 
     // SVG inline (grafice)
-    const svg = await makeSvg(stats);
+    const svgs = {
+      camps: svgTopCamps(stats),
+      regions: svgTopRegions(stats),
+    };
 
     // compunem PDF – fisier temporar /tmp
     const tmpDir = process.env.TMPDIR || "/tmp";
     const file = path.join(tmpDir, `report-${Date.now()}.pdf`);
-    await createPdf(stats, svg, file);
+    await createPdf(stats, svgs, file);
 
     //raspuns
     res.writeHead(200, {

@@ -20,7 +20,16 @@ async function getStats() {
     LIMIT 5
   `);
 
-  return { total_camps, total_reviews, avg_rating, topCamps };
+  const { rows: topRegions } = await db.query(`
+    SELECT c.region, COUNT(r.id)::int AS reviews
+    FROM camp_sites c
+    JOIN reviews r ON r.camp_site_id = c.id
+    GROUP BY c.region
+    ORDER BY reviews DESC
+    LIMIT 5
+  `);
+
+  return { total_camps, total_reviews, avg_rating, topCamps, topRegions };
 }
 
 module.exports = { getStats };
