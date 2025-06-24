@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const mime = require("mime-types");
 
+
 module.exports = function serveStatic(router, publicDir) {
   const staticRegex =
     /^(\/$|\/uploads\/.+|.*\.(html|css|js|png|jpg|jpeg|svg|ico|mp4|webm|ogg))$/i;

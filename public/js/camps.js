@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
     foot.appendChild(price);
 
     const btn = el("a", "btn btn-sm btn-outline", "Vezi detalii");
-    btn.href = "#";
+    btn.href = "campground.html?id=" + c.id;
     foot.appendChild(btn);
 
     card.appendChild(foot);

@@ -1,4 +1,5 @@
-const { Pool } = require("pg");
+const { Pool, types } = require("pg");
+types.setTypeParser(1082, (val) => val);
 const pool = new Pool({ connectionString: process.env.PG_CONN });
 
 async function findOrCreateOAuthUser({ provider, oauth_id, email, name }) {
