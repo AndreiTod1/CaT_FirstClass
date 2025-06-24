@@ -83,30 +83,6 @@
   }
 }
 
-@media (min-width: 768px) {
-  .section-title {
-    font-size: 2.25rem;
-  }
-
-  .camping-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .features-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .map-content {
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-  }
-
-  .footer-content {
-    grid-template-columns: 1fr 2fr;
-    gap: 4rem;
-  }
-}
-
 @media (min-width: 1024px) {
   .camping-grid {
     grid-template-columns: repeat(4, 1fr);

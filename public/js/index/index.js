@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const imgBox = el("div", "camping-image");
     const img = el("img");
     img.src = c.image_url || "images/placeholder.jpg";
+    img.alt = "img";
     imgBox.appendChild(img);
     card.appendChild(imgBox);
 
