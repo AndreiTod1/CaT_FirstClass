@@ -2,6 +2,7 @@
 const { google } = require("googleapis");
 const db = require("../services/db");
 const { sign, verify } = require("../services/jwt");
+const parseCookies = require("../utils/parseCookies");
 
 // Initialize OAuth2 client
 const oauth2Client = new google.auth.OAuth2(
@@ -9,16 +10,6 @@ const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_SECRET,
   process.env.GOOGLE_REDIRECT
 );
-
-function parseCookies(cookieHeader = "") {
-  return cookieHeader
-    .split(";")
-    .map((v) => v.split("="))
-    .reduce((acc, [k, v]) => {
-      acc[k.trim()] = decodeURIComponent(v);
-      return acc;
-    }, {});
-}
 
 function registerAuthRoutes(router) {
   // Start Google OAuth2 flow
