@@ -27,10 +27,22 @@ document.addEventListener("DOMContentLoaded", () => {
     return svg;
   };
 
-  function addReviewPhoto(box, url) {
-    const img = el("img", "review-photo");
-    img.src = url;
-    box.appendChild(img);
+  function addReviewMedia(box, url) {
+    const ext = url.split(".").pop().toLowerCase();
+
+    // extensii video uzuale
+    if (["mp4", "webm", "ogg"].includes(ext)) {
+      const vid = el("video", "review-video");
+      vid.src = url;
+      vid.controls = true; // butoanele play/pause
+      vid.preload = "metadata"; // doar frame-uri, thumbnail rapid
+      box.appendChild(vid);
+    } else {
+      const img = el("img", "review-photo");
+      img.src = url;
+      img.loading = "lazy";
+      box.appendChild(img);
+    }
   }
 
   function createCard(review, camp) {
@@ -104,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // photos
     if (Array.isArray(review.media_urls) && review.media_urls.length > 0) {
       const photos = el("div", "review-photos");
-      review.media_urls.forEach((u, i) => addReviewPhoto(photos, u));
+      review.media_urls.forEach((u, i) => addReviewMedia(photos, u));
       card.appendChild(photos);
     }
 
