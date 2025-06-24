@@ -260,7 +260,7 @@ function createMonthCalendar(date) {
       2,
       "0"
     )}`;
-    const past = new Date(y, m, d) < new Date().setHours(0, 0, 0, 0);
+    const past = new Date(y, m, d) <= new Date().setHours(0, 0, 0, 0);
 
     if (bookedDates.includes(iso)) {
       cell.classList.add("booked");
