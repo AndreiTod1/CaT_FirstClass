@@ -15,6 +15,10 @@
   text-align: center;
 }
 
+.section-footer {
+  margin-top: 2rem;
+}
+
 .camping-grid {
   display: grid;
   grid-template-columns: 1fr;

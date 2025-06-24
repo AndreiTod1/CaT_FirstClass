@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     price.insertAdjacentHTML("beforeend", "<span>lei/noapte</span>");
     foot.appendChild(price);
     const btn = el("a", "btn btn-sm btn-outline", "Vezi detalii");
-    btn.href = `campground-details.html?id=${c.id}`;
+    btn.href = `/campground.html?id=${c.id}`;
     foot.appendChild(btn);
     card.appendChild(foot);
 

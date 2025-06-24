@@ -6,12 +6,13 @@ const mime = require("mime-types");
 module.exports = function (router, publicDir) {
   router.add(
     "GET",
-    /^(\/$|.*\.(html|css|js|png|jpg|jpeg|svg|ico))$/,
+    /^(\/$|.*\.(html|css|js|png|jpg|jpeg|svg|ico)(\?.*)?)$/,
     (req, res) => {
       let urlPath = req.url.split("?")[0];
       if (urlPath === "/") urlPath = "/index.html";
 
-      const filePath = path.join(publicDir, urlPath);
+      const filePath = path.join(publicDir, urlPath.replace(/^\/+/, ""));
+
       if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
         res.writeHead(404);
         return res.end("Not Found");

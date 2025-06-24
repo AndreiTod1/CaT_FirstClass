@@ -306,10 +306,57 @@ async function toggleCampStatus(req, res) {
   }
 }
 
+/*
+ * GET /api/camps/:id
+ * Status 200, 400, 404, 500
+ */
+async function getCampById(req, res) {
+  // extrage id-ul din URL
+  const match = req.url.match(/^\/api\/camps\/(\d+)$/);
+  const id = match && match[1];
+
+  if (!id) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "Missing camp ID" }));
+  }
+
+  try {
+    const result = await db.query(
+      `
+        SELECT
+          c.*,
+          COALESCE(r.avg_rating, 0)::numeric(3,2) AS avg_rating
+        FROM camp_sites c
+        LEFT JOIN (
+          SELECT camp_site_id, AVG(rating) AS avg_rating
+          FROM reviews
+          GROUP BY camp_site_id
+        ) r ON r.camp_site_id = c.id
+        WHERE c.id = $1
+        LIMIT 1
+      `,
+      [id]
+    );
+
+    if (result.rowCount === 0) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "Camp not found" }));
+    }
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify(result.rows[0]));
+  } catch (err) {
+    console.error(err);
+    res.writeHead(500, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "Internal server error" }));
+  }
+}
+
 module.exports = function registerCampsRoutes(router) {
   router.add("GET", /^\/api\/camps(?:\?.*)?$/, getAllCamps);
   router.add("POST", /^\/api\/camps$/, createCamp);
   router.add("PUT", /^\/api\/camps\/\d+$/, updateCamp);
   router.add("DELETE", /^\/api\/camps\/\d+$/, deleteCamp);
   router.add("PATCH", /^\/api\/camps\/\d+$/, toggleCampStatus);
+  router.add("GET", /^\/api\/camps\/\d+$/, getCampById);
 };

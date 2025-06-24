@@ -7,6 +7,7 @@ const serveStatic = require("./staticServer");
 const registerCamps = require("./controllers/camps");
 const registerReviews = require("./controllers/reviews");
 const registerUsersRoutes = require("./controllers/users");
+const registerBookings = require("./controllers/bookings");
 
 const {
   registerAuthRoutes,
@@ -21,6 +22,7 @@ async function start() {
   registerAuthRoutes(router);
   registerLogoutRoute(router);
   registerMeRoute(router);
+  registerBookings(router);
 
   // Health check endpoint
   router.add("GET", /^\/api\/health$/, (req, res) => {

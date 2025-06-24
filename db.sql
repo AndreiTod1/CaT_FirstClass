@@ -39,7 +39,7 @@ CREATE TABLE bookings (
     end_date      DATE    NOT NULL,
     status        booking_status NOT NULL DEFAULT 'pending',
     created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
-    CONSTRAINT booking_dates_ck CHECK (end_date > start_date)
+    CONSTRAINT booking_dates_ck CHECK (end_date >= start_date)
 );
 
 CREATE TABLE reviews (
