@@ -166,11 +166,29 @@ function populateReviews(revs) {
   revs.forEach((r) => cont.appendChild(createReviewElement(r)));
 }
 
+const isVideo = (url) => {
+  const ext = url.split("?")[0].split(".").pop().toLowerCase();
+  return ["mp4", "webm", "ogg"].includes(ext);
+};
+
 function createReviewElement(r) {
   const card = document.createElement("div");
   card.className = "review-card";
+
   const rating = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
-  card.innerHTML = `<div class="review-header">
+
+  const mediaHtml = (r.media_urls || [])
+    .map((u) =>
+      isVideo(u)
+        ? `<video src="${u}" controls preload="metadata"
+                  class="review-video video"></video>`
+        : `<img src="${u}" alt="Imagine"
+                class="review-image image" />`
+    )
+    .join("");
+
+  card.innerHTML = `
+     <div class="review-header">
        <div class="review-user-info">
          <div class="review-avatar"><span>${(r.author ||
            "U")[0].toUpperCase()}</span></div>
@@ -181,19 +199,18 @@ function createReviewElement(r) {
        </div>
        <span class="review-date">${formatDate(r.created_at)}</span>
      </div>
+
      <div class="review-content">
        ${r.comment ? `<p class="review-comment">${r.comment}</p>` : ""}
        ${
-         r.media_urls?.length
-           ? `<div class="review-images">${r.media_urls
-               .map((u) => `<img src="${u}" alt="Imagine" />`)
-               .join("")}</div>`
-           : ""
+         mediaHtml ? `<div class="review-image-wrapper">${mediaHtml}</div>` : ""
        }
-     </div>`;
-  // click pe img
+     </div>
+  `;
+
+  //click pe img
   card
-    .querySelectorAll(".review-images img")
+    .querySelectorAll(".review-image.image")
     .forEach((img) =>
       img.addEventListener("click", () => openImageModal(img.src))
     );
@@ -348,6 +365,7 @@ function calculateTotalPrice() {
 
   document.getElementById("totalPrice").textContent = calculatePrice(inD, outD);
 }
+
 function calculatePrice(checkin, checkout) {
   const nights = Math.ceil((checkout - checkin) / 864e5);
   return nights * parseFloat(currentCampground.price ?? 0);
@@ -381,10 +399,10 @@ function openImageModal(url) {
 async function submitReview() {
   if (!currentUser) {
     alert("Trebuie să fii conectat pentru a lăsa o recenzie!");
-    window.location.href = "login.html";
+    location.href = "login.html";
     return;
   }
-  if (currentUser.role !== "member" && currentUser.role !== "admin") {
+  if (!["member", "admin"].includes(currentUser.role)) {
     alert("Nu ai dreptul să postezi recenzii.");
     return;
   }
@@ -393,33 +411,67 @@ async function submitReview() {
     return;
   }
 
-  const comment = document.getElementById("reviewComment").value;
-  const files = document.getElementById("reviewImages").files;
-  const media = Array.from(files)
-    .slice(0, 3)
-    .map(() => currentCampground.image_url || "https://placehold.co/400");
+  const comment = document.getElementById("reviewComment").value.trim();
+  const filesInput = document.getElementById("reviewMedia");
+  const files = Array.from(filesInput.files).slice(0, 3); // max 3
 
-  try {
-    const r = await fetch(`/api/camps/${currentCampground.id}/reviews`, {
+  let options;
+
+  if (files.length) {
+    const fd = new FormData();
+
+    fd.append(
+      "payload",
+      JSON.stringify({
+        userId: currentUser.id,
+        rating: selectedRating,
+        comment: comment || null,
+      })
+    );
+
+    files.forEach((f) => fd.append("media", f));
+
+    options = { method: "POST", body: fd };
+  } else {
+    const mediaUrls = currentCampground.image_url
+      ? [currentCampground.image_url]
+      : [];
+
+    options = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         userId: currentUser.id,
         rating: selectedRating,
         comment: comment || null,
-        mediaUrls: media,
+        mediaUrls,
       }),
-    });
-    if (r.status === 201) {
-      alert("Recenzia ta a fost adăugată cu succes!");
-      document.getElementById("addReviewForm").reset();
-      selectedRating = 0;
-      updateStarDisplay();
-      await loadReviews();
-    } else if (r.status === 409) alert("Ai recenzat deja acest camping!");
-    else alert("A apărut o eroare la adăugarea recenziei!");
-  } catch (e) {
-    console.error("submitReview error:", e);
+    };
+  }
+  try {
+    const r = await fetch(
+      `/api/camps/${currentCampground.id}/reviews`,
+      options
+    );
+
+    switch (r.status) {
+      case 201:
+        alert("Recenzia ta a fost adăugată cu succes!");
+        document.getElementById("addReviewForm").reset();
+        selectedRating = 0;
+        updateStarDisplay();
+        await loadReviews();
+        break;
+
+      case 409:
+        alert("Ai recenzat deja acest camping!");
+        break;
+
+      default:
+        alert("A apărut o eroare la adăugarea recenziei!");
+    }
+  } catch (err) {
+    console.error("submitReview error:", err);
     alert("A apărut o eroare la adăugarea recenziei!");
   }
 }

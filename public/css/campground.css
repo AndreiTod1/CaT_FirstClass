@@ -161,6 +161,19 @@
 .review-card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+.review-image,
+.review-video {
+  width: 160px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.review-image,
+.review-video:hover {
+  transform: scale(1.05);
+}
 
 .review-header {
   display: flex;
