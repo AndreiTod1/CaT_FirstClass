@@ -7,9 +7,11 @@ window.deleteCampground = deleteCampground;
 window.updateUserRole = updateUserRole;
 window.deleteUser = deleteUser;
 window.logout = logout;
+window.updateBookings = updateBookings;
 
 var campgrounds = [];
 var users = [];
+var bookings = [];
 
 // initializare pe pagina de admin
 document.addEventListener("DOMContentLoaded", function () {
@@ -24,17 +26,19 @@ document.addEventListener("DOMContentLoaded", function () {
       var adMob = document.getElementById("adminMenuMobile");
       if (adMob) adMob.style.display = "inline";
 
-      Promise.all([loadCampgrounds(), loadUsers()]).then(function () {
-        updateStats();
-        setupForm();
+      Promise.all([loadCampgrounds(), loadUsers(), loadBookings()]).then(
+        function () {
+          updateStats();
+          setupForm();
 
-        var modal = document.getElementById("editModal");
-        if (modal) {
-          modal.addEventListener("click", function (e) {
-            if (e.target === modal) closeModal();
-          });
+          var modal = document.getElementById("editModal");
+          if (modal) {
+            modal.addEventListener("click", function (e) {
+              if (e.target === modal) closeModal();
+            });
+          }
         }
-      });
+      );
     })
     .catch(function () {});
 });
@@ -99,6 +103,7 @@ function showTab(tabName, btn) {
   if (tabName === "campgrounds") loadCampgrounds();
   if (tabName === "users") loadUsers();
   if (tabName === "add-campground") resetForm();
+  if (tabName === "bookings") updateBookings();
 }
 
 // statistici
@@ -215,7 +220,7 @@ function renderCampgrounds() {
     td6.appendChild(be);
 
     var bt = document.createElement("button");
-    bt.className = "action-btn btn-toggle";
+    bt.className = "action-btn";
     bt.textContent = c.status ? "dezactiveaza" : "activeaza";
     bt.addEventListener("click", function () {
       toggleCampground(c.id);
@@ -223,7 +228,7 @@ function renderCampgrounds() {
     td6.appendChild(bt);
 
     var bd = document.createElement("button");
-    bd.className = "action-btn btn-delete btn-toggle";
+    bd.className = "action-btn btn-delete";
     bd.textContent = "sterge";
     bd.addEventListener("click", function () {
       deleteCampground(c.id);
@@ -313,7 +318,7 @@ function renderUsers() {
 
     var td5 = document.createElement("td");
     var bd = document.createElement("button");
-    bd.className = "action-btn btn-delete btn-toggle";
+    bd.className = "action-btn btn-delete";
     bd.textContent = "sterge";
     bd.addEventListener("click", function () {
       deleteUser(u.id);
@@ -487,6 +492,170 @@ async function deleteUser(id) {
     updateStats();
   } catch (err) {
     alert("eroare la stergere");
+  }
+}
+
+// incarcare rezervari
+async function loadBookings() {
+  try {
+    const response = await fetch("/api/bookings", { credentials: "include" });
+    if (!response.ok) {
+      throw new Error("Failed to fetch bookings");
+    }
+
+    bookings = await response.json();
+    const container = document.getElementById("bookingsList");
+
+    if (bookings.length === 0) {
+      container.innerHTML =
+        '<div class="empty-state"><p>Nu există rezervări încă.</p></div>';
+      return;
+    }
+
+    // Sort bookings by start date (most recent first)
+    bookings.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+
+    const table = document.createElement("table");
+    table.className = "data-table";
+
+    // Create header
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+    const headers = [
+      "ID",
+      "Utilizator ID",
+      "Camping ID",
+      "Data Check-in",
+      "Data Check-out",
+      "Status",
+      "Acțiuni",
+    ];
+
+    headers.forEach((headerText) => {
+      const th = document.createElement("th");
+      th.textContent = headerText;
+      headerRow.appendChild(th);
+    });
+
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    // Create body
+    const tbody = document.createElement("tbody");
+
+    bookings.forEach((booking) => {
+      const row = document.createElement("tr");
+
+      // ID
+      const idCell = document.createElement("td");
+      idCell.textContent = booking.id;
+      row.appendChild(idCell);
+
+      // User ID
+      const userCell = document.createElement("td");
+      userCell.textContent = booking.user_id;
+      row.appendChild(userCell);
+
+      // Camp Site ID
+      const campCell = document.createElement("td");
+      campCell.textContent = booking.camp_site_id;
+      row.appendChild(campCell);
+
+      // Start Date
+      const startCell = document.createElement("td");
+      startCell.textContent = new Date(booking.start_date).toLocaleDateString(
+        "ro-RO"
+      );
+      row.appendChild(startCell);
+
+      // End Date
+      const endCell = document.createElement("td");
+      endCell.textContent = new Date(booking.end_date).toLocaleDateString(
+        "ro-RO"
+      );
+      row.appendChild(endCell);
+
+      // Status
+      const statusCell = document.createElement("td");
+      const statusBadge = document.createElement("span");
+      statusBadge.className = `status-badge ${getStatusClass(booking.status)}`;
+      statusBadge.textContent = getStatusText(booking.status);
+      statusCell.appendChild(statusBadge);
+      row.appendChild(statusCell);
+
+      // Actions
+      const actionsCell = document.createElement("td");
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "action-btn btn-delete";
+      deleteBtn.textContent = "Șterge";
+      deleteBtn.onclick = () => deleteBooking(booking.id);
+      actionsCell.appendChild(deleteBtn);
+      row.appendChild(actionsCell);
+
+      tbody.appendChild(row);
+    });
+
+    table.appendChild(tbody);
+    container.innerHTML = "";
+    container.appendChild(table);
+  } catch (error) {
+    console.error("Error loading bookings:", error);
+    const container = document.getElementById("bookingsList");
+    container.innerHTML =
+      '<div class="empty-state"><p>Eroare la încărcarea rezervărilor.</p></div>';
+  }
+}
+
+function updateBookings() {
+  return loadBookings();
+}
+
+function getStatusClass(status) {
+  switch (status) {
+    case "confirmed":
+      return "status-active";
+    case "pending":
+      return "status-inactive";
+    case "cancelled":
+      return "status-inactive";
+    default:
+      return "status-inactive";
+  }
+}
+
+function getStatusText(status) {
+  switch (status) {
+    case "confirmed":
+      return "Confirmat";
+    case "pending":
+      return "În așteptare";
+    case "cancelled":
+      return "Anulat";
+    default:
+      return status;
+  }
+}
+
+async function deleteBooking(id) {
+  if (!confirm("Ești sigur că vrei să ștergi această rezervare?")) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/bookings/${id}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      alert("Rezervarea a fost ștearsă cu succes!");
+      loadBookings();
+      updateStats();
+    } else {
+      throw new Error("Failed to delete booking");
+    }
+  } catch (error) {
+    console.error("Error deleting booking:", error);
+    alert("Eroare la ștergerea rezervării!");
   }
 }
 
