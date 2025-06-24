@@ -29,11 +29,24 @@ async function addReview(req, res) {
       mediaUrls = [];
 
     if ((req.headers["content-type"] || "").startsWith("multipart/form-data")) {
-      // --- multipart: folosim Busboy
-      const { fields, files } = await handleUpload(
-        req,
-        path.join(process.cwd(), "public", "uploads") // de la radacina proiectului
-      );
+      let fields, files;
+
+      try {
+        ({ fields, files } = await handleUpload(
+          req,
+          path.join(process.cwd(), "public", "uploads")
+        ));
+      } catch (e) {
+        if (e.message === "FILE_TOO_LARGE")
+          return res
+            .writeHead(413, { "Content-Type": "application/json" })
+            .end(JSON.stringify({ error: "Fișierul depășește 10 MB" }));
+        if (e.message === "TOO_MANY_FILES")
+          return res
+            .writeHead(413, { "Content-Type": "application/json" })
+            .end(JSON.stringify({ error: "Maxim 5 fișiere permise" }));
+        throw e; //altceva
+      }
 
       uploadedFiles = files;
 
