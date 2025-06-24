@@ -1,0 +1,63 @@
+/* map preview section */
+.map-preview {
+  padding: 4rem 0;
+  background-color: var(--gray-100);
+}
+
+.map-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.map-info h2 {
+  margin-bottom: 1rem;
+}
+
+.map-info p {
+  margin-bottom: 1.5rem;
+  color: var(--gray-600);
+}
+
+.map-features {
+  margin-bottom: 1.5rem;
+}
+
+.map-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.map-features svg {
+  color: var(--forest);
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.map-container {
+  position: relative;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  height: 300px;
+}
+
+.map-placeholder {
+  position: absolute;
+  inset: 0;
+  background-color: var(--sage);
+  background-color: rgba(116, 198, 157, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--forest);
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
