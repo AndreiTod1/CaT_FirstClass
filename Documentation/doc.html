@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" prefix="scholarly: http://scholarly-html.org/v1#">
+  <head>
+    <meta charset="UTF-8" />
+    <title>GreenCamping - Scholarly HTML Documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://w3c.github.io/scholarly-html/styles/scholarly.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://w3c.github.io/scholarly-html/styles/scholarly.min.css"
+    />
+    <link rel="stylesheet" href="doc.css" />
+  </head>
+  <body vocab="http://schema.org/" typeof="ScholarlyArticle">
+    <header>
+      <h1 property="headline">GreenCamping - HTML Documentation</h1>
+      <h3 property="description">
+        Documentație pentru platforma GreenCamping, o aplicație web pentru
+        descoperirea, rezervarea și administrarea campingurilor din România.
+      </h3>
+    </header>
+
+    <main>
+      <section
+        id="introduction"
+        property="introduction"
+        typeof="scholarly:Introduction"
+      >
+        <h2>1. Introducere</h2>
+        <p>
+          GreenCamping este o platformă web pentru descoperirea, rezervarea și
+          administrarea campingurilor din România. Utilizatorii pot explora
+          locații, pot face rezervări, pot lăsa recenzii și pot interacționa cu
+          o comunitate de pasionați de camping. Platforma oferă și un panou de
+          administrare pentru gestionarea campingurilor, utilizatorilor și
+          rezervărilor.
+        </p>
+      </section>
+
+      <section id="features" property="scholarly:features">
+        <h2>2. Funcționalități principale</h2>
+        <ul>
+          <li>Autentificare cu Google OAuth</li>
+          <li>
+            Listare și filtrare campinguri după regiune, facilități, preț,
+            rating
+          </li>
+          <li>
+            Vizualizare detalii camping (descriere, galerie foto, facilități,
+            recenzii)
+          </li>
+          <li>Rezervare camping cu selectare dată și număr de persoane</li>
+          <li>Adăugare și vizualizare recenzii cu rating și imagini</li>
+          <li>Hartă interactivă cu locațiile campingurilor</li>
+        </ul>
+      </section>
+
+      <section id="admin-features" property="scholarly:features">
+        <h2>3. Funcționalități Admin</h2>
+        <ul>
+          <li>Adăugare, editare și ștergere campinguri</li>
+          <li>Gestionare utilizatori (roluri, ștergere, modificare)</li>
+          <li>Vizualizare și ștergere rezervări</li>
+          <li>
+            Statistici: număr campinguri, utilizatori, rezervări, rating mediu
+          </li>
+          <li>Filtrare și căutare rapidă în panoul de administrare</li>
+        </ul>
+      </section>
+
+      <section id="data-model" property="scholarly:methods">
+        <h2>4. Model de date (PostgreSQL)</h2>
+        <ul>
+          <li>
+            <b>users</b>: id, email, password_hash, name, role, created_at
+          </li>
+          <li>
+            <b>campgrounds</b>: id, name, region, type, price, latitude,
+            longitude, description, status, created_at
+          </li>
+          <li>
+            <b>bookings</b>: id, user_id, camp_site_id, start_date, end_date,
+            guests, status, created_at
+          </li>
+          <li>
+            <b>reviews</b>: id, user_id, camp_site_id, rating, comment,
+            created_at
+          </li>
+          <li><b>media</b>: id, review_id, url, type</li>
+        </ul>
+        <p>
+          Relațiile sunt gestionate prin chei externe (user_id, camp_site_id,
+          review_id).
+        </p>
+      </section>
+
+      <section id="ui-flow" property="scholarly:methods">
+        <h2>5. Interfață utilizator</h2>
+        <ol>
+          <li>
+            Utilizatorul accesează
+            <a href="../public/index.html">pagina principală</a>.
+          </li>
+          <li>
+            Poate naviga la
+            <a href="../public/camps.html">camping-uri</a> sau
+            <a href="../public/map.html">hartă</a>. pentru a vedea locațiile
+            campingurilor.
+          </li>
+          <li>
+            Pentru a vizualiza detalii, poate accesa
+            <a href="../public/campground.html">pagina de detalii</a> a unui
+            camping.
+          </li>
+          <li>
+            După autentificare, poate face rezervări și lăsa recenzii pe pagina
+            camping ului respectiv.
+          </li>
+          <li>
+            Utilizatorii cu rol de admin accesează
+            <a href="../public/admin.html">panoul de administrare</a> pentru
+            gestionare completă.
+          </li>
+        </ol>
+      </section>
+
+      <section id="links" property="scholarly:methods">
+        <h2>Link-uri către pagini principale</h2>
+        <ul>
+          <li><a href="../public/index.html">Acasă</a></li>
+          <li><a href="../public/camps.html">Camping-uri</a></li>
+          <li><a href="../public/campground.html">Detalii Camping</a></li>
+          <li><a href="../public/map.html">Hartă</a></li>
+          <li><a href="../public/reviews.html">Recenzii</a></li>
+          <li><a href="../public/login.html">Login</a></li>
+          <li><a href="../public/register.html">Înregistrare</a></li>
+          <li><a href="../public/admin.html">Admin Panel</a></li>
+        </ul>
+      </section>
+
+      <section id="c4" property="scholarly:methods">
+        <h2>C4 Diagram</h2>
+        <p>
+          Diagrama C4 oferă o viziune de ansamblu asupra arhitecturii aplicației
+          GreenCamping.
+          <figure>
+            <img
+              src="c4-context.png"
+              alt="C4 Context Diagram"
+              style="max-width: 100%; border: 1px solid #ccc"
+            />
+            <figcaption>Context Diagram</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="c4-container.png"
+              alt="C4 Container Diagram"
+              style="max-width: 100%; border: 1px solid #ccc"
+            />
+            <figcaption>Container Diagram</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="c4-component.png"
+              alt="C4 Component Diagram"
+              style="max-width: 100%; border: 1px solid #ccc"
+            />
+            <figcaption>Component Diagram</figcaption>
+          </figure>
+        </p>
+      </section>
+
+      <section id="security" property="scholarly:methods">
+        <h2>Securitate</h2>
+        <ul>
+          <li>Autentificare cu JWT, stocat în cookie HttpOnly</li>
+          <li>Parolele utilizatorilor nu sunt stocate local</li>
+          <li>Validare input pe backend și frontend</li>
+          <li>Protecție prin verificare roluri</li>
+          <li>
+            Acces la panoul de admin doar pentru utilizatori cu rol "admin"
+          </li>
+          <li>Upload fișiere cu limită de dimensiune și validare extensie</li>
+        </ul>
+      </section>
+
+      <section id="requirements" property="scholarly:methods">
+        <h2>Cerințe</h2>
+        <ul>
+          <li>Node.js 18+</li>
+          <li>PostgreSQL 13+</li>
+          <li>Browser modern (Chrome, Firefox, Edge, Safari)</li>
+          <li>Conexiune la internet pentru Google OAuth și hărți Leaflet</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>
