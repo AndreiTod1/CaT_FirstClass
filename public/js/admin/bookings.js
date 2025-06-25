@@ -95,7 +95,9 @@ export class BookingManager {
       deleteBtn.textContent = "Șterge";
       deleteBtn.onclick = () => this.deleteBooking(booking.id);
       actionsCell.appendChild(deleteBtn);
-      row.appendChild(actionsCell);
+      if (booking.status === "confirmed") {
+        row.appendChild(actionsCell);
+      }
 
       tbody.appendChild(row);
     });
@@ -147,12 +149,7 @@ export class BookingManager {
       if (response.ok) {
         alert("Rezervarea a fost ștearsă cu succes!");
         // trigger reload via global function
-        if (window.loadBookings) {
-          window.loadBookings();
-        }
-        if (window.updateStats) {
-          window.updateStats();
-        }
+        window.updateBookings();
       } else {
         throw new Error("Failed to delete booking");
       }

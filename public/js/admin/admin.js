@@ -9,7 +9,6 @@ var bookings = [];
 // global functions
 window.showTab = showTab;
 window.resetForm = resetForm;
-window.closeModal = closeModal;
 window.editCampground = editCampground;
 window.toggleCampground = toggleCampground;
 window.deleteCampground = deleteCampground;
@@ -37,13 +36,6 @@ document.addEventListener("DOMContentLoaded", function () {
         function () {
           updateStats();
           campgroundManager.setupForm();
-
-          var modal = document.getElementById("editModal");
-          if (modal) {
-            modal.addEventListener("click", function (e) {
-              if (e.target === modal) closeModal();
-            });
-          }
         }
       );
     })
@@ -210,9 +202,4 @@ function updateBookings() {
 // util
 function resetForm() {
   campgroundManager.resetForm();
-}
-
-function closeModal() {
-  var m = document.getElementById("editModal");
-  if (m) m.classList.remove("active");
 }

@@ -4,7 +4,7 @@ export class CampgroundManager {
   }
 
   // Helper functions
-  getElementValue(id, defaultValue = "") {
+  getElementValue(id) {
     var element = document.getElementById(id);
     return element ? element.value.trim() : defaultValue;
   }
@@ -168,7 +168,7 @@ export class CampgroundManager {
       let fetchOptions;
       if (hasFiles) {
         const fd = new FormData();
-        fd.append("payload", JSON.stringify(payload)); // backend-ul asteapta „payload”
+        fd.append("payload", JSON.stringify(payload));
         filesArray.forEach((f) => fd.append("media", f));
 
         fetchOptions = {
@@ -291,7 +291,7 @@ export class CampgroundManager {
 
   // Delete campground
   async deleteCampground(id) {
-    if (!confirm("esti sigur?")) return;
+    if (!confirm("esti sigur???")) return;
     try {
       await fetch("/api/camps/" + id, {
         method: "DELETE",
