@@ -16,6 +16,7 @@ window.deleteCampground = deleteCampground;
 window.updateUserRole = updateUserRole;
 window.deleteUser = deleteUser;
 window.updateBookings = updateBookings;
+window.downloadStatisticsPDF = downloadStatisticsPDF;
 
 const campgroundManager = new CampgroundManager();
 const bookingManager = new BookingManager();
@@ -152,10 +153,10 @@ async function loadBookings() {
 }
 
 function downloadStatisticsPDF() {
-  fetch("/api/statistics/pdf", {
+  fetch("/api/reports/daily", {
     method: "GET",
     headers: {
-      credentials: include,
+      credentials: "include",
       Accept: "application/pdf",
     },
   })
