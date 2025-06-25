@@ -58,7 +58,7 @@ async function loadCampgroundDetails() {
 
   const imgUrl =
     currentCampground.image_url ||
-    "https://placehold.co/1200x800?text=No+image";
+    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80";
   const priceNum = parseFloat(currentCampground.price ?? 0);
   const rating = parseFloat(currentCampground.avg_rating ?? 0).toFixed(1);
 

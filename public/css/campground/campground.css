@@ -491,7 +491,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 2000;
 }
 
 .image-modal-content {
@@ -516,7 +516,7 @@
 }
 
 /* responsive */
-@media (max-width: 768px) {
+@media (max-width: 845px) {
   .camping-hero-content h1 {
     font-size: 2rem;
   }
