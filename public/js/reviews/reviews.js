@@ -141,12 +141,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     footer.appendChild(actions);
 
-    if (Array.isArray(review.media_urls) && review.media_urls.length > 0) {
-      const btn = el("a", "btn btn-sm btn-outline", "Vezi toate fotografiile");
-      btn.href = "#";
-      footer.appendChild(btn);
-    }
-
     card.appendChild(footer);
 
     return card;
