@@ -55,13 +55,17 @@ async function getUserById(id) {
 
 async function selectReservedDays(campId) {
   const sql = `
-    SELECT DISTINCT TO_CHAR(d::date,'YYYY-MM-DD') AS day
-      FROM bookings b,
-           generate_series(b.start_date, b.end_date, interval '1 day') AS d
-     WHERE b.camp_site_id = $1
-       AND b.status IN ('pending','confirmed')
-     ORDER BY day;
-  `;
+   SELECT DISTINCT TO_CHAR(d::date,'YYYY-MM-DD') AS day
+          FROM bookings b,
+               generate_series(
+              b.start_date,               
+              b.end_date - interval '1 day',
+              interval '1 day'
+            ) AS d
+         WHERE b.camp_site_id = $1
+           AND b.status IN ('pending','confirmed')
+         ORDER BY day;
+      `;
   const { rows } = await pool.query(sql, [campId]);
   return rows.map((r) => r.day); // ["2025-07-26", …]
 }
@@ -73,16 +77,49 @@ async function selectAllBookings() {
   return rows;
 }
 
+async function selectBookingsByUser(userId) {
+  const { rows } = await pool.query(
+    `
+    SELECT
+      b.id,
+      b.camp_site_id,
+      b.start_date,
+      b.end_date,
+      b.status,
+      b.created_at,
+
+      c.name AS camp_site_name,
+      c.description,
+      c.latitude,
+      c.longitude,
+      c.region,
+      c.price,
+      c.type,
+      c.wifi,
+      c.shower,
+      c.parking,
+      c.barbecue,
+      c.image_url
+    FROM bookings b
+    JOIN camp_sites c ON c.id = b.camp_site_id
+    WHERE b.user_id = $1
+    ORDER BY b.start_date
+    `,
+    [userId]
+  );
+  return rows;
+}
+
 //VALIDATION
 
 async function hasOverlap(camp_site_id, start_date, end_date) {
   const sql = `
     SELECT 1 FROM bookings
-     WHERE camp_site_id = $1
-       AND status IN ('pending','confirmed')
-       AND daterange(start_date, end_date, '[]')
-           && daterange($2::date, $3::date, '[]')
-     LIMIT 1;
+    WHERE camp_site_id = $1
+    AND status IN ('confirmed')
+    
+    AND daterange(start_date, end_date, '[)')
+        && daterange($2::date, $3::date, '[)')
   `;
   const { rowCount } = await pool.query(sql, [
     camp_site_id,
@@ -406,11 +443,13 @@ module.exports = {
   query: (text, params) => pool.query(text, params),
   findOrCreateOAuthUser,
   getUserById,
+
   selectReservedDays,
   selectAllBookings,
   hasOverlap,
   insertBooking,
   cancelBookingById,
+  selectBookingsByUser,
 
   getAllCampsService,
   getCampByIdService,

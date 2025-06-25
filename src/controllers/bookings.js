@@ -4,8 +4,35 @@ const {
   hasOverlap,
   insertBooking,
   cancelBookingById,
+  selectBookingsByUser,
 } = require("../services/db");
 const parseJson = require("../utils/parseJSON");
+
+/*
+  GET /api/bookings/user?userId=42
+  status 200, 400, 500
+*/
+async function getUserBookings(req, res) {
+  try {
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const userId = parseInt(url.searchParams.get("userId"), 10);
+
+    if (!userId) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Missing or invalid userId" }));
+      return;
+    }
+
+    const bookings = await selectBookingsByUser(userId);
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(bookings));
+  } catch (err) {
+    console.error("getUserBookings:", err);
+    res.writeHead(500, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Internal server error" }));
+  }
+}
 
 /*
   GET /api/bookings?campId=123
@@ -92,6 +119,7 @@ async function cancelBooking(req, res) {
 }
 
 module.exports = function registerBookings(router) {
+  router.add("GET", /^\/api\/bookings\/user\/?(?:\?.*)?$/, getUserBookings);
   router.add("GET", /^\/api\/bookings\/?(?:\?.*)?$/, getBookings);
   router.add("POST", /^\/api\/bookings\/?$/, createBooking);
   router.add("DELETE", /^\/api\/bookings\/\d+\/?$/, cancelBooking);
