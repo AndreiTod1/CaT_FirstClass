@@ -151,6 +151,30 @@ async function loadBookings() {
   bookingManager.renderBookings(bookings);
 }
 
+function downloadStatisticsPDF() {
+  fetch("/api/statistics/pdf", {
+    method: "GET",
+    headers: {
+      credentials: include,
+      Accept: "application/pdf",
+    },
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error("Eroare la descărcarea PDF-ului");
+      return response.blob();
+    })
+    .then((blob) => {
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, "_blank");
+      // Opțional: eliberezi blob-ul după ceva timp
+      setTimeout(() => window.URL.revokeObjectURL(url), 10000);
+    })
+    .catch((error) => {
+      alert("A apărut o eroare la generarea PDF-ului.");
+      console.error(error);
+    });
+}
+
 // wrapper functions for module methods
 function editCampground(id) {
   campgroundManager.editCampground(id, campgrounds);
