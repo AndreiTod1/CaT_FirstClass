@@ -1,4 +1,8 @@
-const db = require("../services/db");
+const {
+  getAllUsersService,
+  updateUserService,
+  deleteUserService,
+} = require("../services/db");
 const parseJSON = require("../utils/parseJSON");
 
 /*
@@ -7,14 +11,10 @@ const parseJSON = require("../utils/parseJSON");
  */
 async function getAllUsers(req, res) {
   try {
-    const result = await db.query(
-      `SELECT id, email, role, created_at
-       FROM users
-       ORDER BY id;`
-    );
+    const users = await getAllUsersService();
 
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(result.rows));
+    res.end(JSON.stringify(users));
   } catch (err) {
     console.error(err);
     res.writeHead(500, { "Content-Type": "application/json" });
@@ -46,12 +46,9 @@ async function updateUser(req, res) {
   }
 
   try {
-    const result = await db.query(
-      `UPDATE users SET role=$1 WHERE id=$2 RETURNING id,email,role,created_at,name`,
-      [role, id]
-    );
+    const updated = await updateUserService(id, role);
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(result.rows[0]));
+    res.end(JSON.stringify(updated));
   } catch (err) {
     console.error(err);
     res.writeHead(500);
@@ -72,14 +69,9 @@ async function deleteUser(req, res) {
   }
 
   try {
-    const result = await db.query(
-      `DELETE FROM users
-        WHERE id = $1
-     RETURNING id`,
-      [id]
-    );
+    const deleted = await userRepo.deleteUser(id);
 
-    if (result.rowCount === 0) {
+    if (!deleted) {
       res.writeHead(404, { "Content-Type": "application/json" });
       return res.end(JSON.stringify({ error: "User not found" }));
     }
