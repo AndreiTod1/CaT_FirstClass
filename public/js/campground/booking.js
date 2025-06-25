@@ -76,7 +76,11 @@ export const BookingModule = {
 
   calculatePrice(checkin, checkout) {
     const nights = Math.ceil((checkout - checkin) / 864e5);
-    return nights * parseFloat(this.currentCampground.price ?? 0);
+    return (
+      nights *
+      parseFloat(this.currentCampground.price ?? 0) *
+      (parseInt(document.getElementById("guestsCount").value) || 1)
+    );
   },
 
   async submit() {
