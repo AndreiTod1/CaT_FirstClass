@@ -1,5 +1,10 @@
 const { URL } = require("url");
-const db = require("../services/db");
+const {
+  addReviewService,
+  getReviewsService,
+  getAllReviewsService,
+  likeReviewService,
+} = require("../services/db");
 const parseJSON = require("../utils/parseJSON");
 const requireAuth = require("../middleware/requireAuth");
 const handleUpload = require("../utils/upload");
@@ -75,26 +80,21 @@ async function addReview(req, res) {
       );
     }
 
-    const { rowCount: campExists } = await db.query(
-      `SELECT 1 FROM camp_sites WHERE id = $1`,
-      [campId]
-    );
+    const inserted = await addReviewService({
+      userId,
+      campId,
+      rating,
+      comment,
+      mediaUrls,
+    });
 
-    if (!campExists) {
+    if (!inserted) {
       res.writeHead(404, { "Content-Type": "application/json" });
       return res.end(JSON.stringify({ error: "Camping inexistent" }));
     }
 
-    const result = await db.query(
-      `INSERT INTO reviews
-         (user_id, camp_site_id, rating, comment, media_urls)
-       VALUES ($1,$2,$3,$4,$5)
-       RETURNING *`,
-      [userId, campId, rating, comment, mediaUrls]
-    );
-
     res.writeHead(201, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(result.rows[0]));
+    res.end(JSON.stringify(inserted));
   } catch (err) {
     // !! error 23505 pg
     if (err.code === "23505") {
@@ -121,19 +121,12 @@ async function getReviews(req, res) {
     res.writeHead(404);
     return res.end();
   }
-  const campId = Number(match[1]);
 
-  const result = await db.query(
-    `SELECT r.*, u.email AS author
-       FROM reviews r
-       JOIN users u ON u.id = r.user_id
-     WHERE r.camp_site_id = $1
-     ORDER BY r.created_at DESC`,
-    [campId]
-  );
+  const campId = Number(match[1]);
+  const reviews = await getReviewsService(campId);
 
   res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(JSON.stringify(result.rows));
+  res.end(JSON.stringify(reviews));
 }
 
 /*
@@ -142,24 +135,10 @@ async function getReviews(req, res) {
  */
 async function getAllReviews(req, res) {
   try {
-    const result = await db.query(
-      `SELECT
-         r.id,
-         r.camp_site_id,
-         r.user_id,
-         u.email AS author,
-         r.rating,
-         r.comment,
-         r.media_urls,
-         r.likes,
-         r.created_at
-       FROM reviews r
-       JOIN users u ON u.id = r.user_id
-       ORDER BY r.created_at DESC`
-    );
+    const reviews = await getAllReviewsService();
 
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(result.rows));
+    res.end(JSON.stringify(reviews));
   } catch (err) {
     console.error("Error fetching all reviews:", err);
     res.writeHead(500, { "Content-Type": "application/json" });
@@ -183,24 +162,15 @@ async function likeReview(req, res) {
   if (!userId) return res.writeHead(401).end();
 
   try {
-    await db.query(
-      `INSERT INTO review_likes (review_id,user_id) VALUES ($1,$2)`,
-      [reviewId, userId]
-    );
+    const likes = await likeReviewService({ reviewId, userId });
+    res
+      .writeHead(200, { "Content-Type": "application/json" })
+      .end(JSON.stringify({ likes }));
   } catch (err) {
     // 23505 = PK duplicate
     if (err.code === "23505") return res.writeHead(409).end();
     throw err;
   }
-
-  // nr actual de like-uri
-  const {
-    rows: [{ likes }],
-  } = await db.query(`SELECT likes FROM reviews WHERE id = $1`, [reviewId]);
-
-  res
-    .writeHead(200, { "Content-Type": "application/json" })
-    .end(JSON.stringify({ likes }));
 }
 
 module.exports = function registerReviewRoutes(router) {
