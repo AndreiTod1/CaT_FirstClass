@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GreenCamping - Descoperă locuri de camping</title>
     <link rel="stylesheet" href="./css/base.css" />
-    <link rel="stylesheet" href="./css/map.css" />
+    <link rel="stylesheet" href="./css/map/map.css" />
 
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
       rel="stylesheet"
     />
-    <script src="js/map.js" defer></script>
-    <script src="js/base.js" defer></script>
+    <script src="js/base.js"></script>
+    <script src="js/map/map.js"></script>
 
     <!-- leatflet -->
     <link
@@ -28,7 +28,7 @@
         <a href="index.html" class="logo">
           GreenCamping
           <span class="logo-emoji">
-            <img src="images/logo.png" width="50" height="50" />
+            <img src="images/logo.png" alt="logo" width="50" height="50" />
           </span>
         </a>
         <nav class="desktop-nav">
@@ -105,6 +105,13 @@
               <select class="filter-select">
                 <option value="all">Toate regiunile</option>
                 <option value="transilvania">Transilvania</option>
+                <option value="muntenia">Muntenia</option>
+                <option value="moldova">Moldova</option>
+                <option value="dobrogea">Dobrogea</option>
+                <option value="banat">Banat</option>
+                <option value="crisana">Crișana</option>
+                <option value="maramures">Maramureș</option>
+                <option value="oltenia">Oltenia</option>
               </select>
             </div>
           </div>
@@ -166,11 +173,11 @@
     </section>
 
     <!-- Results Section -->
-    <section style="padding: 0 0 2rem; background-color: var(--gray-50)">
+    <section class="results">
       <div class="container">
         <div class="results-section">
           <div class="results-header">
-            <h3 class="results-count">Locații găsite (123514)</h3>
+            <h3 class="results-count">Locații găsite ()</h3>
           </div>
           <div class="location-grid"></div>
         </div>
@@ -185,25 +192,10 @@
           <div class="map-placeholder">
             <div>Hartă interactivă OpenStreetMap</div>
           </div>
-
-          <div class="map-legend">
-            <div class="legend-item">
-              <div class="legend-color"></div>
-              <span>Camping Disponibil</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-color"></div>
-              <span>Camping Ocupat</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-color"></div>
-              <span>Camping Popular</span>
-            </div>
-          </div>
         </div>
 
-        <div style="margin-top: 2rem; text-align: center">
-          <p style="margin-bottom: 1rem; color: var(--gray-600)">
+        <div class="suggestion">
+          <p>
             Nu ai găsit ce căutai? Trimite-ne un mesaj pentru a sugera noi
             locații de camping.
           </p>
@@ -219,20 +211,14 @@
           <div class="footer-info">
             <div class="footer-logo">
               GreenCamping
-              <span><img src="images/logo.png" width="50" height="50" /></span>
+              <span
+                ><img src="images/logo.png" alt="logo" width="50" height="50"
+              /></span>
             </div>
             <p class="footer-description">
               Platforma ta pentru descoperirea și rezervarea campingurilor din
               România.
             </p>
-          </div>
-
-          <div class="social-links">
-            <a href="" class="social-link">Fb</a>
-            <a href="https://www.instagram.com/andreitod1/" class="social-link">
-              Ig
-            </a>
-            <a href="#" class="social-link">Tw</a>
           </div>
         </div>
         <div class="footer-bottom">

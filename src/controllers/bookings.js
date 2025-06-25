@@ -16,10 +16,10 @@ async function getBookings(req, res) {
         SELECT DISTINCT TO_CHAR(d::date,'YYYY-MM-DD') AS day
           FROM bookings b,
                generate_series(
-                   b.start_date,         /* capăt inclusiv */
-                   b.end_date,           /* capăt inclusiv */
-                   interval '1 day'
-               ) AS d
+              b.start_date,               
+              b.end_date - interval '1 day',
+              interval '1 day'
+            ) AS d
          WHERE b.camp_site_id = $1
            AND b.status IN ('pending','confirmed')
          ORDER BY day;
@@ -70,14 +70,15 @@ async function createBooking(req, res) {
     );
   }
 
-  // verificare suprapunere (capete incluse)
+  // verificare suprapunere
+  // se exclude ziua de checkout
   const overlapSQL = `
-    SELECT 1 FROM bookings
-     WHERE camp_site_id = $1
-       AND status IN ('pending','confirmed')
-       AND daterange(start_date, end_date, '[]')
-           && daterange($2::date, $3::date, '[]')
-     LIMIT 1;
+   SELECT 1 FROM bookings
+    WHERE camp_site_id = $1
+    AND status IN ('confirmed')
+    
+    AND daterange(start_date, end_date, '[)')
+        && daterange($2::date, $3::date, '[)')
   `;
   const overlap = await db.query(overlapSQL, [
     camp_site_id,
