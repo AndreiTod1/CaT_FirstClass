@@ -9,6 +9,9 @@ const {
 
 const parseJson = require("../utils/parseJSON");
 const { URL } = require("url");
+const handleUpload = require("../utils/upload");
+const path = require("path");
+const fs = require("fs");
 
 /*
  * GET /api/camps?filter1?filter2...
@@ -35,13 +38,58 @@ async function getAllCamps(req, res) {
  * Status 201, 400
  */
 async function createCamp(req, res) {
+  let uploadedFiles = []; // clean-up list
   try {
-    const body = await parseJson(req);
-    const camp = await createCampService(body);
+    let payload,
+      mediaUrls = [];
+
+    if ((req.headers["content-type"] || "").startsWith("multipart/form-data")) {
+      // multipart/form-data
+      let fields, files;
+      try {
+        ({ fields, files } = await handleUpload(
+          req,
+          path.join(process.cwd(), "public", "uploads")
+        ));
+      } catch (e) {
+        if (e.message === "FILE_TOO_LARGE")
+          return res
+            .writeHead(413, { "Content-Type": "application/json" })
+            .end(JSON.stringify({ error: "Fișierul depășește 10 MB" }));
+        if (e.message === "TOO_MANY_FILES")
+          return res
+            .writeHead(413, { "Content-Type": "application/json" })
+            .end(JSON.stringify({ error: "Maxim 5 fișiere permise" }));
+        throw e;
+      }
+
+      uploadedFiles = files;
+      if (!fields.payload) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ error: "Lipsește câmpul payload" }));
+      }
+
+      payload = JSON.parse(fields.payload);
+      mediaUrls = files.map((f) => f.url); // public links
+    } else {
+      payload = await parseJson(req);
+      mediaUrls = payload.mediaUrls || [];
+    }
+
+    if (!payload.name) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "name & location obligatorii" }));
+    }
+
+    const camp = await createCampService({
+      ...payload,
+      image_url: mediaUrls.length ? mediaUrls[0] : payload.image_url || "",
+    });
 
     res.writeHead(201, { "Content-Type": "application/json" });
     res.end(JSON.stringify(camp));
   } catch (err) {
+    uploadedFiles.forEach((f) => fs.unlink(f.path, () => {}));
     console.error(err);
     res.writeHead(400, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Invalid request body" }));
@@ -54,31 +102,73 @@ async function createCamp(req, res) {
  * Status 200, 400, 404, 500
  */
 async function updateCamp(req, res) {
-  // extrage id-ul
   const match = req.url.match(/^\/api\/camps\/(\d+)$/);
   const id = match && match[1];
   if (!id) {
     res.writeHead(400, { "Content-Type": "application/json" });
     return res.end(JSON.stringify({ error: "Missing camp ID" }));
   }
+
+  let uploadedFiles = [];
   try {
-    const body = await parseJson(req);
-    const camp = await updateCampService(id, body);
+    let payload,
+      newMedia = [];
+
+    if ((req.headers["content-type"] || "").startsWith("multipart/form-data")) {
+      let fields, files;
+      try {
+        ({ fields, files } = await handleUpload(
+          req,
+          path.join(process.cwd(), "public", "uploads")
+        ));
+      } catch (e) {
+        if (e.message === "FILE_TOO_LARGE")
+          return res
+            .writeHead(413, { "Content-Type": "application/json" })
+            .end(JSON.stringify({ error: "Fișierul depășește 10 MB" }));
+        if (e.message === "TOO_MANY_FILES")
+          return res
+            .writeHead(413, { "Content-Type": "application/json" })
+            .end(JSON.stringify({ error: "Maxim 5 fișiere permise" }));
+        throw e;
+      }
+
+      uploadedFiles = files;
+      if (!fields.payload) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ error: "Lipsește câmpul payload" }));
+      }
+
+      payload = JSON.parse(fields.payload);
+      newMedia = files.map((f) => f.url);
+    } else {
+      payload = await parseJson(req);
+      newMedia = payload.newMedia || [];
+    }
+
+    // merge media lists if client only sends diff
+    const finalPayload = {
+      ...payload,
+      image_url: newMedia.length ? newMedia[0] : payload.image_url || null,
+    };
+
+    const camp = await updateCampService(id, finalPayload);
 
     if (!camp) {
+      uploadedFiles.forEach((f) => fs.unlink(f.path, () => {}));
       res.writeHead(404, { "Content-Type": "application/json" });
       return res.end(JSON.stringify({ error: "Camp not found" }));
     }
 
     res.writeHead(200, { "Content-Type": "application/json" });
-    return res.end(JSON.stringify(camp));
+    res.end(JSON.stringify(camp));
   } catch (err) {
+    uploadedFiles.forEach((f) => fs.unlink(f.path, () => {}));
     console.error(err);
     res.writeHead(500, { "Content-Type": "application/json" });
-    return res.end(JSON.stringify({ error: "Internal server error" }));
+    res.end(JSON.stringify({ error: "Internal server error" }));
   }
 }
-
 /*
  * DELETE /api/camps/:id
  * Status 204, 400, 404, 500

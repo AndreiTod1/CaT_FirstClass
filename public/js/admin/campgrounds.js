@@ -107,60 +107,45 @@ export class CampgroundManager {
 
   // Setup form for adding/updating campgrounds
   setupForm() {
-    var form = document.getElementById("campgroundForm");
+    const form = document.getElementById("campgroundForm");
     if (!form) return;
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // Get form values safely
-      var idField = this.getElementValue("campgroundId");
-      var name = this.getElementValue("campgroundName");
-      var region = this.getElementValue("campgroundRegion");
-      var type = this.getElementValue("campgroundType");
-      var price = this.getElementValue("campgroundPrice");
-      var description = this.getElementValue("campgroundDescription");
-      var latitude = this.getElementValue("campgroundLatitude");
-      var longitude = this.getElementValue("campgroundLongitude");
+      // campuri text/numerice
+      const idField = this.getElementValue("campgroundId");
+      const name = this.getElementValue("campgroundName");
+      const region = this.getElementValue("campgroundRegion");
+      const type = this.getElementValue("campgroundType");
+      const price = this.getElementValue("campgroundPrice");
+      const description = this.getElementValue("campgroundDescription");
+      const latitude = this.getElementValue("campgroundLatitude");
+      const longitude = this.getElementValue("campgroundLongitude");
 
       // Validate required fields
-      if (!name) {
-        alert("Numele camping-ului este obligatoriu!");
-        return;
-      }
-      if (!type) {
-        alert("Tipul camping-ului este obligatoriu!");
-        return;
-      }
-      if (!price || isNaN(parseFloat(price))) {
-        alert("Prețul trebuie să fie un număr valid!");
-        return;
-      }
+      if (!name) return alert("Numele camping-ului este obligatoriu!");
+      if (!type) return alert("Tipul camping-ului este obligatoriu!");
+      if (!price || isNaN(parseFloat(price)))
+        return alert("Prețul trebuie să fie un număr valid!");
 
-      // Parse numeric values safely
-      var latVal = latitude ? parseFloat(latitude) : null;
-      var lngVal = longitude ? parseFloat(longitude) : null;
-      var priceVal = parseFloat(price);
+      const latVal = latitude ? parseFloat(latitude) : null;
+      const lngVal = longitude ? parseFloat(longitude) : null;
+      const priceVal = parseFloat(price);
 
-      // Validate coordinates if provided
-      if (latitude && (isNaN(latVal) || latVal < -90 || latVal > 90)) {
-        alert("Latitudinea trebuie să fie între -90 și 90!");
-        return;
-      }
-      if (longitude && (isNaN(lngVal) || lngVal < -180 || lngVal > 180)) {
-        alert("Longitudinea trebuie să fie între -180 și 180!");
-        return;
-      }
+      if (latitude && (isNaN(latVal) || latVal < -90 || latVal > 90))
+        return alert("Latitudinea trebuie să fie între -90 și 90!");
+      if (longitude && (isNaN(lngVal) || lngVal < -180 || lngVal > 180))
+        return alert("Longitudinea trebuie să fie între -180 și 180!");
 
-      var payload = {
-        name: name,
+      const payload = {
+        name,
         latitude: latVal,
         longitude: lngVal,
         region: region || null,
-        type: type,
+        type,
         price: priceVal,
         description: description || null,
-        image_url: null,
         wifi: this.getCheckboxValue('input[value="wifi"]'),
         shower: this.getCheckboxValue('input[value="showers"]'),
         barbecue: this.getCheckboxValue(
@@ -170,19 +155,40 @@ export class CampgroundManager {
         capacity: 0,
       };
 
-      var method = idField ? "PUT" : "POST";
-      var url = idField ? "/api/camps/" + idField : "/api/camps";
+      // fisiere media
+      const fileInput = document.getElementById("campgroundMedia");
+      const filesArray =
+        fileInput && fileInput.files ? Array.from(fileInput.files) : [];
+      const hasFiles = filesArray.length > 0;
 
-      try {
-        var res = await fetch(url, {
-          method: method,
+      // fetch
+      const method = idField ? "PUT" : "POST";
+      const url = idField ? `/api/camps/${idField}` : "/api/camps";
+
+      let fetchOptions;
+      if (hasFiles) {
+        const fd = new FormData();
+        fd.append("payload", JSON.stringify(payload)); // backend-ul asteapta „payload”
+        filesArray.forEach((f) => fd.append("media", f));
+
+        fetchOptions = {
+          method,
+          credentials: "include",
+          body: fd,
+        };
+      } else {
+        fetchOptions = {
+          method,
           credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
-        });
+        };
+      }
 
+      try {
+        const res = await fetch(url, fetchOptions);
         if (!res.ok) {
-          var errorData = await res.text();
+          const errorData = await res.text();
           throw new Error("Server error: " + errorData);
         }
 
@@ -193,13 +199,10 @@ export class CampgroundManager {
         );
         this.resetForm();
 
-        // Trigger reload via global function
-        if (window.loadCampgrounds) {
-          await window.loadCampgrounds();
-        }
+        if (window.loadCampgrounds) await window.loadCampgrounds();
 
-        // Switch to campgrounds tab
-        var btn = document.querySelector(
+        // revenim la tab-ul „campgrounds”
+        const btn = document.querySelector(
           ".admin-tab[onclick*=\"'campgrounds'\"]"
         );
         if (btn) window.showTab("campgrounds", btn);
@@ -316,5 +319,8 @@ export class CampgroundManager {
 
     var submitBtn = document.getElementById("submitBtn");
     if (submitBtn) submitBtn.textContent = "Adaugă camping";
+
+    const mediaField = document.getElementById("campgroundMedia");
+    if (mediaField) mediaField.value = "";
   }
 }
