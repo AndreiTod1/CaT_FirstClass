@@ -60,11 +60,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!res.ok) throw new Error("Eroare la încărcarea camping-urilor");
       return res.json();
     })
-    .then((camps) => camps.filter((c) => Number(c.avg_rating) > 4.5))
+    .then((camps) =>
+      camps.filter((c) => Number(c.avg_rating) >= 4.0 && c.status == true)
+    )
     .then(renderGrid)
     .catch((err) => {
       console.error(err);
       grid.innerHTML =
-        "<p class='error'>Nu am găsit camping-uri cu rating peste 4.5.</p>";
+        "<p class='error'>Nu am găsit camping-uri cu rating peste 4.0.</p>";
     });
 });

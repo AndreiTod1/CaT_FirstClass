@@ -104,7 +104,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (countEl) countEl.textContent = `Locații găsite (${camps.length})`;
 
       camps.forEach((camp) => {
-        if (camp.latitude && camp.longitude) {
+        console.log("Adding marker for camp:", camp);
+        if (camp.latitude && camp.longitude && camp.status === true) {
           L.marker([camp.latitude, camp.longitude])
             .addTo(markersGroup)
             .bindPopup(`<b>${camp.name}</b><br>${camp.description || ""}`);
